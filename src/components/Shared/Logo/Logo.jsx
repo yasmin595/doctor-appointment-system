@@ -16,7 +16,6 @@ export default function Logo() {
          alt='Logo' 
          className='w-10 sm:w-12 md:w-14 lg:w-16'
          />
-         
         {/* Text tightly aligned with logo */}
         <span className="ml-1 text-sm sm:text-base md:text-lg font-bold text-green-600">
           DocNow
@@ -24,5 +23,6 @@ export default function Logo() {
       </div>
     </Link>
     </div>
+    
   )
 }
