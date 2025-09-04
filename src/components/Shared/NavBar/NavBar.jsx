@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import BBLogo from "../Logo/Logo";
+import Logo from "../Logo/Logo";
+
 
 export default function Navbar() {
   return (
@@ -9,7 +10,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <BBLogo />
+          <Logo></Logo>
         </div>
 
         {/* Desktop Navigation - md screen */}
