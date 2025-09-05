@@ -31,23 +31,21 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
- 
-      <NextAuthProvider>
-            <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NavBar></NavBar>
-          {children}
-           <Toaster richColors />
-            <Footer></Footer>
- development
-        </ThemeProvider>
-      </NextAuthProvider>
 
-      
+        <NextAuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NavBar></NavBar>
+            {children}
+            <Toaster richColors />
+            <Footer></Footer>
+
+          </ThemeProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );
