@@ -3,6 +3,11 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 
+import { Toaster } from "react-hot-toast";
+import Nav from "@/app/components/Nav";
+
+import NextAuthProvider from "@/providers/NextAuthProvider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,15 +29,22 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
+ 
+      <NextAuthProvider>
+            <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
+  <Nav></Nav>
+            <Toaster></Toaster>
           {children}
            <Toaster richColors />
         </ThemeProvider>
+      </NextAuthProvider>
+
+      
       </body>
     </html>
   );
