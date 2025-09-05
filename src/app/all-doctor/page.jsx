@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 
-export default function AllDoctorPage() {
+const AllDoctorPage=()=> {
     const [doctors, setDoctors] = useState([]);
 
     useEffect(() => {
