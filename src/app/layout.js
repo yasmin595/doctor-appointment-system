@@ -5,7 +5,7 @@ import NavBar from "@/components/Shared/NavBar/NavBar";
 import Footer from "@/components/Shared/Footer/Footer";
 import { Toaster } from "@/components/ui/sonner"
 
-import { Toaster } from "react-hot-toast";
+// import { Toaster } from "react-hot-toast";
 import Nav from "@/app/components/Nav";
 
 import NextAuthProvider from "@/providers/NextAuthProvider";
@@ -40,7 +40,6 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <NavBar></NavBar>
-            <Toaster></Toaster>
           {children}
            <Toaster richColors />
             <Footer></Footer>
