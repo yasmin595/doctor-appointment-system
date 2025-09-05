@@ -1,4 +1,3 @@
-
 import HomePage from "@/components/HomePage/HomePage";
 import { Button } from "@/components/ui/button"
 
@@ -13,4 +12,5 @@ export default function Home() {
     </div>
   );
 }
+
 

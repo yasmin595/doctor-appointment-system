@@ -31,8 +31,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
- 
-      <NextAuthProvider>
+<NextAuthProvider>
             <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -45,8 +44,6 @@ export default function RootLayout({ children }) {
             <Footer></Footer>
         </ThemeProvider>
       </NextAuthProvider>
-
-      
       </body>
     </html>
   );

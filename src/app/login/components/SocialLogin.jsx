@@ -4,7 +4,7 @@ import { FaGoogle } from "react-icons/fa";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export default function SocialLogin() {
   const router = useRouter();
