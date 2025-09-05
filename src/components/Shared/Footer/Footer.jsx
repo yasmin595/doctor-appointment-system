@@ -6,7 +6,7 @@ import Logo from "../Logo/Logo";
 
 export default function Footer() {
   return (
-    <footer className="bg-green-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 mt-auto">
+    <footer className="bg-green-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 mt-16">
       <div className="container mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Logo & About */}
         <div className="flex flex-col space-y-3">

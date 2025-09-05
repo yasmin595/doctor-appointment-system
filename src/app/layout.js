@@ -31,21 +31,19 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-
-        <NextAuthProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <NavBar></NavBar>
-            {children}
-            <Toaster richColors />
+<NextAuthProvider>
+            <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NavBar></NavBar>
+         <main className=" flex-1"> {children}</main>
+           <Toaster richColors />
             <Footer></Footer>
-
-          </ThemeProvider>
-        </NextAuthProvider>
+        </ThemeProvider>
+      </NextAuthProvider>
       </body>
     </html>
   );
