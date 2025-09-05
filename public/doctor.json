@@ -1,0 +1,39 @@
+[
+    {
+        "id": 1,
+        "name": "Dr. Ayesha Rahman",
+        "specialization": "Cardiologist",
+        "location": "Dhaka, Bangladesh",
+        "experience": "10 years",
+        "consultationFee": 1200,
+        "availability": [
+            "Monday",
+            "Wednesday",
+            "Friday"
+        ],
+        "timeSlots": [
+            "10:00 AM - 12:00 PM",
+            "5:00 PM - 7:00 PM"
+        ],
+        "profilePicture": "https://randomuser.me/api/portraits/women/44.jpg",
+        "rating": 4.8
+    },
+    {
+        "id": 2,
+        "name": "Dr. Imran Hossain",
+        "specialization": "Dermatologist",
+        "location": "Chittagong, Bangladesh",
+        "experience": "8 years",
+        "consultationFee": 900,
+        "availability": [
+            "Tuesday",
+            "Thursday"
+        ],
+        "timeSlots": [
+            "11:00 AM - 1:00 PM",
+            "6:00 PM - 8:00 PM"
+        ],
+        "profilePicture": "https://randomuser.me/api/portraits/men/32.jpg",
+        "rating": 4.6
+    }
+]
