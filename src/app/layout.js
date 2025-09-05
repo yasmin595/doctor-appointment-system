@@ -3,6 +3,12 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import NavBar from "@/components/Shared/NavBar/NavBar";
 import Footer from "@/components/Shared/Footer/Footer";
+import { Toaster } from "@/components/ui/sonner"
+
+import { Toaster } from "react-hot-toast";
+import Nav from "@/app/components/Nav";
+
+import NextAuthProvider from "@/providers/NextAuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,16 +31,24 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
+ 
+      <NextAuthProvider>
+            <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
           <NavBar></NavBar>
+            <Toaster></Toaster>
           {children}
-          <Footer></Footer>
+           <Toaster richColors />
+            <Footer></Footer>
+ development
         </ThemeProvider>
+      </NextAuthProvider>
+
+      
       </body>
     </html>
   );
