@@ -2,18 +2,34 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Logo from "../Logo/Logo";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname(); // for active link highlighting
 
+  // Scroll effect
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50); // navbar becomes solid after 50px scroll
+      setScrolled(window.scrollY > 50);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Links for navigation
+  const links = [
+    { name: "Home", href: "/" },
+    { name: "All Doctors", href: "/alldoctors" },
+    { name: "Services", href: "/services" },
+    { name: "Dashboard", href: "/dashboard" },
+    { name: "About", href: "/about" },
+    { name: "Contact", href: "/contact" },
+  ];
+
+  // Check if link is active
+  const isActive = (href) => pathname === href;
 
   return (
     <nav
@@ -30,55 +46,21 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Links */}
-        <ul className="hidden md:flex space-x-6 text-sm lg:text-base">
-          <li>
-            <Link
-              href="/"
-              className="hover:text-green-700 dark:hover:text-green-400 transition"
-            >
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/alldoctors"
-              className="hover:text-green-700 dark:hover:text-green-400 transition"
-            >
-              All Doctors
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/services"
-              className="hover:text-green-700 dark:hover:text-green-400 transition"
-            >
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/dashboard"
-              className="hover:text-green-700 dark:hover:text-green-400 transition"
-            >
-              Dashboard
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/about"
-              className="hover:text-green-700 dark:hover:text-green-400 transition"
-            >
-              About
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/contact"
-              className="hover:text-green-700 dark:hover:text-green-400 transition"
-            >
-              Contact
-            </Link>
-          </li>
+        <ul className="hidden md:flex flex-1 justify-center space-x-6 text-sm lg:text-base ml-4">
+          {links.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className={`transition ${
+                  isActive(link.href)
+                    ? "text-green-700 dark:text-green-400 font-semibold"
+                    : "hover:text-green-700 dark:hover:text-green-400"
+                }`}
+              >
+                {link.name}
+              </Link>
+            </li>
+          ))}
         </ul>
 
         {/* Auth Buttons */}
@@ -104,43 +86,33 @@ export default function Navbar() {
               Menu
             </summary>
             <ul className="absolute right-0 mt-2 w-48 bg-green-50 dark:bg-gray-800 shadow-md rounded-md p-2 grid gap-2 z-50">
+              {links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={`block px-2 py-1 rounded ${
+                      isActive(link.href)
+                        ? "bg-green-100 dark:bg-green-700 font-semibold"
+                        : "hover:bg-green-100 dark:hover:bg-gray-700"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
               <li>
-                <Link href="/" className="block px-2 py-1 hover:bg-green-100 dark:hover:bg-gray-700 rounded">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/alldoctors" className="block px-2 py-1 hover:bg-green-100 dark:hover:bg-gray-700 rounded">
-                  All Doctors
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="block px-2 py-1 hover:bg-green-100 dark:hover:bg-gray-700 rounded">
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/dashboard" className="block px-2 py-1 hover:bg-green-100 dark:hover:bg-gray-700 rounded">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="block px-2 py-1 hover:bg-green-100 dark:hover:bg-gray-700 rounded">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="block px-2 py-1 hover:bg-green-100 dark:hover:bg-gray-700 rounded">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/login" className="block px-2 py-1 hover:bg-green-100 dark:hover:bg-gray-700 rounded">
+                <Link
+                  href="/login"
+                  className="block px-2 py-1 rounded hover:bg-green-100 dark:hover:bg-gray-700"
+                >
                   Login
                 </Link>
               </li>
               <li>
-                <Link href="/signUp" className="block px-2 py-1 hover:bg-green-100 dark:hover:bg-gray-700 rounded">
+                <Link
+                  href="/signUp"
+                  className="block px-2 py-1 rounded hover:bg-green-100 dark:hover:bg-gray-700"
+                >
                   SignUp
                 </Link>
               </li>
