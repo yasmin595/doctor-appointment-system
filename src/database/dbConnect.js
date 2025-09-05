@@ -25,12 +25,12 @@
 // }
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-export const collectionsNameObj = { userCollection: "test_user" };
+//export const collectionsNameObj = { userCollection: "test_user" };
 
 let client;
 let db;
 
-export default async function dbConnect(collectionName) {
+export default async function dbConnect() {
   if (!client) {
     client = new MongoClient(process.env.MONGODB_URI, {
       serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true },
@@ -38,6 +38,7 @@ export default async function dbConnect(collectionName) {
     await client.connect();
     db = client.db(process.env.DB_NAME);
   }
-  return db.collection(collectionName);
+  //return db.collection(collectionName);
+  return db;
 }
 
