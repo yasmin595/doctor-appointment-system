@@ -2,6 +2,7 @@ import React from 'react'
 import Banner from './Banner/Banner'
 import HowItWorks from './HowItWorks/HowItWorks'
 import PatientFeedback from './PatientFeedback/PatientFeedback'
+import WhyDocNow from './WhyDocNow/WhyDocNow'
 
 export default function HomePage() {
   return (
@@ -19,6 +20,11 @@ export default function HomePage() {
        {/* PatientFeedback Section */}
       <section className="mt-16 bg-green-50 dark:bg-gray-900">
         <PatientFeedback/>
+      </section>
+
+       {/* WhyDocNow Section */}
+      <section className="mt-16 bg-green-50 dark:bg-gray-900">
+        <WhyDocNow/>
       </section>
     </div>
   )
