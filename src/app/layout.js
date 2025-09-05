@@ -1,6 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
+import NavBar from "@/components/Shared/NavBar/NavBar";
+import Footer from "@/components/Shared/Footer/Footer";
 import { Toaster } from "@/components/ui/sonner"
 
 import { Toaster } from "react-hot-toast";
@@ -37,10 +39,12 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-  <Nav></Nav>
+          <NavBar></NavBar>
             <Toaster></Toaster>
           {children}
            <Toaster richColors />
+            <Footer></Footer>
+ development
         </ThemeProvider>
       </NextAuthProvider>
 
