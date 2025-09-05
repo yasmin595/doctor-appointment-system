@@ -8,7 +8,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
-// import { Button } from "@/components/ui/button";
 
 export default function AllDoctorPage() {
     const [doctors, setDoctors] = useState([]);
@@ -19,6 +18,7 @@ export default function AllDoctorPage() {
             .then((data) => setDoctors(data));
     }, []);
 
+    
     return (
         <div className="max-w-6xl mx-auto p-6">
             <h1 className="text-3xl font-bold text-center mb-8">All Doctors</h1>
