@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 
 import { Toaster } from "react-hot-toast";
-import Nav from "@/components.jsx/Nav";
+import Nav from "@/app/components/Nav";
 
 import NextAuthProvider from "@/providers/NextAuthProvider";
 
