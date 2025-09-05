@@ -1,19 +1,43 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+// import { MongoClient, ServerApiVersion } from "mongodb";
 
-const uri = process.env.MONGODB_URI;
+// export const collectionsNameObj = {
+//   userCollection: "test_user",
+// };
 
-export const collectionsNameObj = () => ({
-    // servicesCollection: "",
-    // userCollection: ""
-});
+// let client;
+// let db;
 
-export const dbConnect = (collectionName) => {
-    const client = new MongoClient(uri, {
-        serverApi: {
-            version: ServerApiVersion.v1,
-            strict: true,
-            deprecationErrors: true,
-        }
+// export default async function dbConnect(collectionName) {
+//   if (!client) {
+//     const uri = process.env.MONGODB_URI;
+//     client = new MongoClient(uri, {
+//       serverApi: {
+//         version: ServerApiVersion.v1,
+//         strict: true,
+//         deprecationErrors: true,
+//       },
+//     });
+//     await client.connect(); // <-- এখানে connect করতে হবে
+//     db = client.db(process.env.DB_NAME);
+//   }
+
+//   return db.collection(collectionName);
+// }
+import { MongoClient, ServerApiVersion } from "mongodb";
+
+export const collectionsNameObj = { userCollection: "test_user" };
+
+let client;
+let db;
+
+export default async function dbConnect(collectionName) {
+  if (!client) {
+    client = new MongoClient(process.env.MONGODB_URI, {
+      serverApi: { version: ServerApiVersion.v1, strict: true, deprecationErrors: true },
     });
-    return client.db(process.env.DB_NAME).collection(collectionName);
-};
+    await client.connect();
+    db = client.db(process.env.DB_NAME);
+  }
+  return db.collection(collectionName);
+}
+

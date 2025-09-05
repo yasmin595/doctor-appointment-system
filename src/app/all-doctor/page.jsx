@@ -81,3 +81,6 @@ export default function AllDoctorPage() {
         </div>
     );
 }
+
+
+export default AllDoctorPage;
