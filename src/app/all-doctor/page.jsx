@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
 
-export default function AllDoctorPage() {
+const AllDoctorPage=()=> {
     const [doctors, setDoctors] = useState([]);
 
     useEffect(() => {
@@ -18,6 +18,7 @@ export default function AllDoctorPage() {
             .then((data) => setDoctors(data));
     }, []);
 
+    
     
     return (
         <div className="max-w-6xl mx-auto p-6">
