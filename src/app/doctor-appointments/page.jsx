@@ -4,15 +4,26 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    Tabs,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { FaCheckCircle, FaTimesCircle, FaClock, FaCalendarAlt } from "react-icons/fa";
 import { Table2Icon } from "lucide-react";
-import { CardSimIcon } from "lucide-react";
 import { NotebookIcon } from "lucide-react";
+import { toast } from "sonner";
 
 // Mock Data
-const appointments = [
+const aappointments = [
     { id: "#0001", name: "Sarah Johnson", initials: "SJ", time: "09:00 AM", date: "2024-01-15", condition: "Regular Checkup", status: "Scheduled", prescription: null },
     { id: "#0002", name: "Michael Chen", initials: "MC", time: "10:30 AM", date: "2024-01-15", condition: "Follow-up Consultation", status: "In Progress", prescription: null },
     { id: "#0003", name: "Emily Davis", initials: "ED", time: "11:15 AM", date: "2024-01-15", condition: "Skin Allergy", status: "Completed", prescription: "prescription_001.pdf" },
@@ -35,15 +46,41 @@ const statusIcons = {
     Cancelled: <FaTimesCircle />,
 };
 export default function DoctorAppointments() {
+    const [appointments, setAppointments] = useState(aappointments);
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("All");
-    const [view, setView] = useState ("table");
+    const [view, setView] = useState("table");
+    const [selectedAppt, setSelectedAppt] = useState(null);
+    const [newStatus, setNewStatus] = useState("");
+
 
     const filteredAppointments = appointments.filter((appt) => {
         const matchesSearch = appt.name.toLowerCase().includes(search.toLowerCase());
         const matchesFilter = filter === "All" || appt.status === filter;
         return matchesSearch && matchesFilter;
     });
+    const updateStatus = () => {
+        if (!selectedAppt) return;
+        setAppointments((prev) =>
+            prev.map((appt) =>
+                appt.id === selectedAppt.id ? { ...appt, status: newStatus } : appt
+            )
+        );
+        toast.success("Appointment status updated successfully!");
+
+        setSelectedAppt(null);
+    };
+
+    const uploadPrescription = (file) => {
+        if (!selectedAppt) return;
+        setAppointments((prev) =>
+            prev.map((appt) =>
+                appt.id === selectedAppt.id ? { ...appt, prescription: file.name } : appt
+            )
+        );
+        toast.success("Prescription uploaded successfully!");
+        setSelectedAppt(null);
+    };
 
     return (
         <div className="p-6">
@@ -74,8 +111,8 @@ export default function DoctorAppointments() {
 
                 <Tabs value={view} onValueChange={(val) => setView(val)} className="ml-auto">
                     <TabsList>
-                        <TabsTrigger value="table">Table View <Table2Icon/></TabsTrigger>
-                        <TabsTrigger value="card">Card View <NotebookIcon/></TabsTrigger>
+                        <TabsTrigger value="table">Table View <Table2Icon /></TabsTrigger>
+                        <TabsTrigger value="card">Card View <NotebookIcon /></TabsTrigger>
                     </TabsList>
                 </Tabs>
             </div>
@@ -120,6 +157,110 @@ export default function DoctorAppointments() {
                                             "No prescription"
                                         )}
                                     </td>
+                                    <td className="p-3 flex gap-2">
+                                        {/* Change Status Modal */}
+                                        <Dialog >
+                                            <DialogTrigger asChild>
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    onClick={() => {
+                                                        setSelectedAppt(appt);
+                                                        setNewStatus(appt.status);
+                                                    }}
+                                                >
+                                                    Change Status
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Change Status for {appt.name}</DialogTitle>
+                                                </DialogHeader>
+                                                <Select value={newStatus} onValueChange={setNewStatus}>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select new status" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="Scheduled">Scheduled</SelectItem>
+                                                        <SelectItem value="In Progress">In Progress</SelectItem>
+                                                        <SelectItem value="Completed">Completed</SelectItem>
+                                                        <SelectItem value="Cancelled">Cancelled</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <DialogFooter>
+                                                    <DialogClose asChild>
+                                                        <Button variant="outline">Cancel</Button>
+                                                    </DialogClose>
+                                                    <DialogClose asChild>
+                                                        <Button onClick={() => {
+                                                            updateStatus();
+                                                        }}>Confirm</Button>
+                                                    </DialogClose>
+
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
+
+                                        {/* Upload Prescription Modal */}
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <Button size="sm" variant="outline">
+                                                    Upload Prescription
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent className="sm:max-w-lg w-full rounded-lg p-6 bg-white shadow-xl">
+                                                <DialogHeader>
+                                                    <DialogTitle className="text-lg font-semibold text-gray-800">
+                                                        Upload Prescription for {appt.name}
+                                                    </DialogTitle>
+                                                    <p className="text-sm text-gray-500 mt-1">
+                                                        Please select a prescription file (PDF, DOC, DOCX) to upload.
+                                                    </p>
+                                                </DialogHeader>
+
+                                                <div className="mt-4 flex flex-col items-center justify-center gap-4">
+                                                    <label
+                                                        htmlFor={`file-upload-${appt.id}`}
+                                                        className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                                                    >
+                                                        <svg
+                                                            className="w-10 h-10 text-gray-400 mb-2"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v8m0 0l-3-3m3 3l3-3M12 4v8"
+                                                            />
+                                                        </svg>
+                                                        <span className="text-gray-600 text-sm">
+                                                            Click to select or drag and drop your file here
+                                                        </span>
+                                                        <input
+                                                            id={`file-upload-${appt.id}`}
+                                                            type="file"
+                                                            accept=".pdf,.doc,.docx"
+                                                            className="hidden"
+                                                            onChange={(e) => e.target.files && uploadPrescription(e.target.files[0])}
+                                                        />
+                                                    </label>
+                                                    <DialogClose asChild>
+                                                        <Button
+                                                            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                                                            onClick={() => selectedAppt && uploadPrescription(selectedAppt)}
+                                                        >
+                                                            Upload
+                                                        </Button>
+                                                    </DialogClose>
+
+                                                </div>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
@@ -157,6 +298,110 @@ export default function DoctorAppointments() {
                                         "No prescription"
                                     )}
                                 </p>
+                                <div className="flex gap-2 mt-2">
+                                    {/* Change Status Modal */}
+                                    <Dialog >
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                onClick={() => {
+                                                    setSelectedAppt(appt);
+                                                    setNewStatus(appt.status);
+                                                }}
+                                            >
+                                                Change Status
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent>
+                                            <DialogHeader>
+                                                <DialogTitle>Change Status for {appt.name}</DialogTitle>
+                                            </DialogHeader>
+                                            <Select value={newStatus} onValueChange={setNewStatus}>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select new status" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="Scheduled">Scheduled</SelectItem>
+                                                    <SelectItem value="In Progress">In Progress</SelectItem>
+                                                    <SelectItem value="Completed">Completed</SelectItem>
+                                                    <SelectItem value="Cancelled">Cancelled</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <DialogFooter>
+                                                <DialogClose asChild>
+                                                    <Button variant="outline">Cancel</Button>
+                                                </DialogClose>
+                                                <DialogClose asChild>
+                                                    <Button onClick={() => {
+                                                        updateStatus();
+                                                    }}>Confirm</Button>
+                                                </DialogClose>
+
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </Dialog>
+
+                                    {/* Upload Prescription Modal */}
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+                                            <Button size="sm" variant="outline">
+                                                Upload Prescription
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-lg w-full rounded-lg p-6 bg-white shadow-xl">
+                                            <DialogHeader>
+                                                <DialogTitle className="text-lg font-semibold text-gray-800">
+                                                    Upload Prescription for {appt.name}
+                                                </DialogTitle>
+                                                <p className="text-sm text-gray-500 mt-1">
+                                                    Please select a prescription file (PDF, DOC, DOCX) to upload.
+                                                </p>
+                                            </DialogHeader>
+
+                                            <div className="mt-4 flex flex-col items-center justify-center gap-4">
+                                                <label
+                                                    htmlFor={`file-upload-${appt.id}`}
+                                                    className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                                                >
+                                                    <svg
+                                                        className="w-10 h-10 text-gray-400 mb-2"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12v8m0 0l-3-3m3 3l3-3M12 4v8"
+                                                        />
+                                                    </svg>
+                                                    <span className="text-gray-600 text-sm">
+                                                        Click to select or drag and drop your file here
+                                                    </span>
+                                                    <input
+                                                        id={`file-upload-${appt.id}`}
+                                                        type="file"
+                                                        accept=".pdf,.doc,.docx"
+                                                        className="hidden"
+                                                        onChange={(e) => e.target.files && uploadPrescription(e.target.files[0])}
+                                                    />
+                                                </label>
+                                                <DialogClose asChild>
+                                                    <Button
+                                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                                                        onClick={() => selectedAppt && uploadPrescription(selectedAppt)}
+                                                    >
+                                                        Upload
+                                                    </Button>
+                                                </DialogClose>
+
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
                             </CardContent>
                         </Card>
                     ))}
