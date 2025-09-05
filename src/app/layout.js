@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
           {children}
            <Toaster richColors />
             <Footer></Footer>
- development
+ 
         </ThemeProvider>
       </NextAuthProvider>
 
