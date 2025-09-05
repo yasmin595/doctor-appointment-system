@@ -1,108 +1,103 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Logo from "../Logo/Logo";
 
-
 export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50); // navbar becomes solid after 50px scroll
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <nav className="sticky top-0 z-50 bg-green-50 dark:bg-gray-900 shadow-md">
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-green-50 dark:bg-gray-900 shadow-md"
+          : "bg-transparent"
+      }`}
+    >
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
         <div className="flex-shrink-0">
-          <Logo></Logo>
+          <Logo />
         </div>
 
-        {/* Desktop Navigation - md screen */}
-        <div className="hidden md:flex lg:hidden flex-1 justify-center">
-          <ul className="flex space-x-3 items-center text-sm">
-            <li>
-              <Link href="/" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/alldoctors" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                All Doctors
-              </Link>
-            </li>
-            <li>
-              <Link href="/services" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                Services
-              </Link>
-            </li>
-            <li>
-              <Link href="/dashboard" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                Contact
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        {/* Desktop Navigation - lg screen */}
-        <div className="hidden lg:flex flex-1 justify-center">
-          <ul className="flex space-x-6 items-center text-base">
-            <li>
-              <Link href="/" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/alldoctors" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                All Doctors
-              </Link>
-            </li>
-            <li>
-              <Link href="/services" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                Services
-              </Link>
-            </li>
-            <li>
-              <Link href="/dashboard" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className="hover:text-green-700 dark:hover:text-green-400 transition">
-                Contact
-              </Link>
-            </li>
-          </ul>
-        </div>
+        {/* Desktop Links */}
+        <ul className="hidden md:flex space-x-6 text-sm lg:text-base">
+          <li>
+            <Link
+              href="/"
+              className="hover:text-green-700 dark:hover:text-green-400 transition"
+            >
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/alldoctors"
+              className="hover:text-green-700 dark:hover:text-green-400 transition"
+            >
+              All Doctors
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/services"
+              className="hover:text-green-700 dark:hover:text-green-400 transition"
+            >
+              Services
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/dashboard"
+              className="hover:text-green-700 dark:hover:text-green-400 transition"
+            >
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/about"
+              className="hover:text-green-700 dark:hover:text-green-400 transition"
+            >
+              About
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/contact"
+              className="hover:text-green-700 dark:hover:text-green-400 transition"
+            >
+              Contact
+            </Link>
+          </li>
+        </ul>
 
         {/* Auth Buttons */}
-        <div className="hidden md:flex lg:space-x-3 md:space-x-2">
-          {/* md screen */}
+        <div className="hidden md:flex space-x-3">
           <Link
             href="/login"
-            className="md:px-2 md:py-0.5 md:text-xs lg:px-3 lg:py-1 lg:text-sm rounded-md bg-green-600 hover:bg-green-700 text-white font-medium transition"
+            className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white font-medium transition"
           >
             Login
           </Link>
           <Link
             href="/signUp"
-            className="md:px-2 md:py-0.5 md:text-xs lg:px-3 lg:py-1 lg:text-sm rounded-md bg-green-600 hover:bg-green-700 text-white font-medium transition"
+            className="px-3 py-1 rounded-md bg-green-600 hover:bg-green-700 text-white font-medium transition"
           >
             SignUp
           </Link>
         </div>
 
-        {/* Mobile Menu - sm screens */}
+        {/* Mobile Menu */}
         <div className="flex md:hidden relative">
           <details className="relative">
             <summary className="px-3 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md cursor-pointer select-none">
