@@ -40,10 +40,9 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <NavBar></NavBar>
-         <main className="flex-1"> {children}</main>
+         <main className=" flex-1"> {children}</main>
            <Toaster richColors />
             <Footer></Footer>
- development
         </ThemeProvider>
       </NextAuthProvider>
 
