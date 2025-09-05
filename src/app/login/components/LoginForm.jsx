@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import SocialLogin from "./SocialLogin";
 
 export default function LoginForm() {
