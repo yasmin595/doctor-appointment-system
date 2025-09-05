@@ -8,7 +8,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
-// import { Button } from "@/components/ui/button";
 
 export default function AllDoctorPage() {
     const [doctors, setDoctors] = useState([]);
