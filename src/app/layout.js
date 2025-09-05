@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
 
 import { Toaster } from "react-hot-toast";
 import Nav from "@/app/components/Nav";
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
   <Nav></Nav>
             <Toaster></Toaster>
           {children}
+           <Toaster richColors />
         </ThemeProvider>
       </NextAuthProvider>
 
