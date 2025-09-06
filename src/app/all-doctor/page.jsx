@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 const AllDoctorPage=()=> {
     const [doctors, setDoctors] = useState([]);
-
+ 
     useEffect(() => {
         fetch("/doctor.json")
             .then((res) => res.json())

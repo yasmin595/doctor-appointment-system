@@ -1,13 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
+
+// ✅ Static sample data
 
 export default function Page() {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("doctor"); // doctor | tourist
+  const [activeTab, setActiveTab] = useState("doctors"); // doctors | patients
 
-  // Fetch all users
+
+    // Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -23,61 +24,22 @@ export default function Page() {
     fetchUsers();
   }, []);
 
-  // Delete user
-  const handleDelete = async (id) => {
+  // ✅ Delete user
+  const handleDelete = (id) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
-    try {
-      const res = await fetch(`/api/admin/manageUsers/${id}`, { method: "DELETE" });
-      const result = await res.json();
-      if (res.ok) {
-        setUsers(users.filter((user) => user._id !== id));
-        alert(result.message);
-      } else {
-        alert(result.error || "Failed to delete user");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error deleting user");
-    }
+    setUsers(users.filter((user) => user._id !== id));
   };
 
-  
-  // Doctor verification
-  const handleVerify = async (id, status) => {
-    alert(`Doctor ${status} for user id: ${id}`);
-    // Later: call PATCH API to update doctor status
+  // ✅ Update doctor status
+  const handleStatusChange = (id, newStatus) => {
+    setUsers((prev) =>
+      prev.map((user) =>
+        user._id === id ? { ...user, status: newStatus } : user
+      )
+    );
   };
 
-  if (loading) {
-    return <div className="p-6">Loading users...</div>;
-  }
-
-
-// ✅ Update doctor status with confirmation + success toast
-const handleStatusChange = (id, newStatus) => {
-  toast.promise(
-    new Promise((resolve, reject) => {
-      // Show confirm dialog
-      if (confirm(`Are you sure you want to mark this doctor as ${newStatus}?`)) {
-        setUsers((prev) =>
-          prev.map((user) =>
-            user._id === id ? { ...user, status: newStatus } : user
-          )
-        );
-        resolve(); // success
-      } else {
-        reject(); // cancelled
-      }
-    }),
-    {
-      loading: "Updating status...",
-      success: `Doctor status updated to ${newStatus}!`,
-      error: "Action cancelled",
-    }
-  );
-};
-  // Filter by role
-   // ✅ Filter users by tab
+  // ✅ Filter users by tab
   const filteredUsers =
     activeTab === "doctors"
       ? users.filter((u) => u.role === "doctor")
