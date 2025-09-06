@@ -167,7 +167,7 @@ const AllDoctorPage = () => {
                                         </ul>
                                     </div>
                                 )}
-
+ 
                                 <div>
                                     <p className="font-semibold">Availability:</p>
                                     <ul className="list-disc list-inside">
