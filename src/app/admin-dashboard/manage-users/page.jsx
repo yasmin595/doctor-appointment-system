@@ -57,11 +57,10 @@ const handleStatusChange = (id, newStatus) => {
 };
 
   // ✅ Filter users by tab
-  const filteredUsers =
-    activeTab === "doctors"
-      ? users.filter((u) => u.role === "doctor")
-      : users.filter((u) => u.role !== "doctor");
-
+const filteredUsers =
+  activeTab === "doctors"
+    ? users.filter((u) => u.role === "doctor")
+    : users.filter((u) => u.role === "patient");
   return (
     <div className="p-6 my-5">
       <h1 className="text-2xl font-bold mb-6">Manage Users</h1>
@@ -82,7 +81,7 @@ const handleStatusChange = (id, newStatus) => {
             activeTab === "patients" ? "bg-blue-600 text-white" : "bg-gray-200"
           }`}
         >
-          Patients & Admin
+          Patients
         </button>
       </div>
 
