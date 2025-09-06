@@ -8,6 +8,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import {
     Dialog,
     DialogContent,
@@ -24,6 +25,12 @@ const AllDoctorPage = () => {
     const [sortOption, setSortOption] = useState("");
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [open, setOpen] = useState(false);
+    const router = useRouter();
+    console.log(doctors);
+
+    const handleConfirm = (doctorId) => {
+        router.push(`/all-doctor/${doctorId}`);
+    };
 
     useEffect(() => {
         fetch("/doctor.json")
@@ -66,7 +73,7 @@ const AllDoctorPage = () => {
 
     return (
         <div className="max-w-6xl mx-auto p-6">
-            <h1 className="text-3xl font-bold text-center mb-6">All Doctors</h1>
+            <h1 className="text-3xl font-bold text-center text-background mb-6">All Doctors</h1>
 
             {/* Search & Sort Controls */}
             <div className="flex flex-col md:flex-row gap-4 justify-between mb-8">
@@ -167,7 +174,7 @@ const AllDoctorPage = () => {
                                         </ul>
                                     </div>
                                 )}
- 
+
                                 <div>
                                     <p className="font-semibold">Availability:</p>
                                     <ul className="list-disc list-inside">
@@ -197,7 +204,7 @@ const AllDoctorPage = () => {
                             <DialogFooter>
                                 <Button
                                     className="w-full"
-                                    onClick={() => alert("Booking confirmed!")}
+                                    onClick={handleConfirm}
                                 >
                                     Confirm Booking
                                 </Button>
