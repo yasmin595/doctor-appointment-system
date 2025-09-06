@@ -149,7 +149,7 @@ const AllDoctorPage = () => {
                                 </DialogDescription>
                             </DialogHeader>
 
-                            <div className="mt-4 space-y-2 text-sm text-stone-700">
+                            <div className="mt-4 space-y-2 text-sm text-stone-400">
                                 <p><span className="font-semibold">Email:</span> {selectedDoctor.email}</p>
                                 <p><span className="font-semibold">Phone:</span> {selectedDoctor.phone}</p>
                                 <p><span className="font-semibold">Bio:</span> {selectedDoctor.bio}</p>
@@ -167,7 +167,7 @@ const AllDoctorPage = () => {
                                         </ul>
                                     </div>
                                 )}
-
+ 
                                 <div>
                                     <p className="font-semibold">Availability:</p>
                                     <ul className="list-disc list-inside">
