@@ -3,9 +3,13 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 // ✅ Static sample data
 
+// ✅ Static sample data
+
 export default function Page() {
   const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState("doctors"); 
+
+
 
 
     // Fetch all users
@@ -55,6 +59,21 @@ const handleStatusChange = (id, newStatus) => {
     `Doctor status updated to "${newStatus}" successfully ✅`
   );
 };
+
+  // ✅ Delete user
+  const handleDelete = (id) => {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+    setUsers(users.filter((user) => user._id !== id));
+  };
+
+  // ✅ Update doctor status
+  const handleStatusChange = (id, newStatus) => {
+    setUsers((prev) =>
+      prev.map((user) =>
+        user._id === id ? { ...user, status: newStatus } : user
+      )
+    );
+  };
 
   // ✅ Filter users by tab
   const filteredUsers =
