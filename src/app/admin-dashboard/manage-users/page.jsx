@@ -111,7 +111,7 @@ export default function Page() {
               )}
               <th className="border border-gray-300 px-4 py-2">Action</th>
             </tr>
-          </thead>
+          </thead> 
           <tbody>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
