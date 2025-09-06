@@ -7,16 +7,16 @@ import { toast } from "sonner";
 
 export default function Page() {
   const [users, setUsers] = useState([]);
-  const [activeTab, setActiveTab] = useState("doctors"); 
+  const [activeTab, setActiveTab] = useState("doctors");
 
 
 
 
-    // Fetch all users
+  // Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch("/api/adminAuth/manageUsers"); 
+        const res = await fetch("/api/adminAuth/manageUsers");
         const data = await res.json();
         setUsers(data);
       } catch (err) {
@@ -30,56 +30,52 @@ export default function Page() {
 
 
 
-// ✅ Delete user with toast confirmation
-const handleDelete = (id) => {
-  toast("Are you sure you want to delete this user?", {
-    action: {
-      label: "Yes, Delete",
-      onClick: () => {
-        setUsers((prev) => prev.filter((user) => user._id !== id));
-        toast.success("User deleted successfully ✅");
-      },
-    },
-    cancel: {
-      label: "Cancel",
-      onClick: () => toast.info("Delete cancelled ❌"),
-    },
-  });
-};
-
-// ✅ Update doctor status with toast
-const handleStatusChange = (id, newStatus) => {
-  setUsers((prev) =>
-    prev.map((user) =>
-      user._id === id ? { ...user, status: newStatus } : user
-    )
-  );
-
-  toast.success(
-    `Doctor status updated to "${newStatus}" successfully ✅`
-  );
-};
-
-  // ✅ Delete user
+  // ✅ Delete user with toast confirmation
   const handleDelete = (id) => {
-    if (!confirm("Are you sure you want to delete this user?")) return;
-    setUsers(users.filter((user) => user._id !== id));
+    toast("Are you sure you want to delete this user?", {
+      action: {
+        label: "Yes, Delete",
+        onClick: () => {
+          setUsers((prev) => prev.filter((user) => user._id !== id));
+          toast.success("User deleted successfully ✅");
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => toast.info("Delete cancelled ❌"),
+      },
+    });
   };
 
-  // ✅ Update doctor status
+  // ✅ Update doctor status with toast
   const handleStatusChange = (id, newStatus) => {
     setUsers((prev) =>
       prev.map((user) =>
         user._id === id ? { ...user, status: newStatus } : user
       )
     );
+
+    toast.success(
+      `Doctor status updated to "${newStatus}" successfully ✅`
+    );
   };
 
+
+
+  // ✅ Update doctor status
+  // const handleStatusChange = (id, newStatus) => {
+  //   setUsers((prev) =>
+  //     prev.map((user) =>
+  //       user._id === id ? { ...user, status: newStatus } : user
+  //     )
+  //   );
+  // };
+
   // ✅ Filter users by tab
-const filteredUsers =
-  activeTab === "doctors"
-    ? users.filter((u) => u.role === "doctor")
-    : users.filter((u) => u.role === "patient");
+  const filteredUsers =
+    activeTab === "doctors"
+      ? users.filter((u) => u.role === "doctor")
+      : users.filter((u) => u.role === "patient");
   return (
     <div className="p-6 my-5">
       <h1 className="text-2xl font-bold mb-6">Manage Users</h1>
@@ -88,17 +84,15 @@ const filteredUsers =
       <div className="flex gap-4 mb-4">
         <button
           onClick={() => setActiveTab("doctors")}
-          className={`px-4 py-2 rounded ${
-            activeTab === "doctors" ? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
+          className={`px-4 py-2 rounded ${activeTab === "doctors" ? "bg-blue-600 text-white" : "bg-gray-200"
+            }`}
         >
           Doctors
         </button>
         <button
           onClick={() => setActiveTab("patients")}
-          className={`px-4 py-2 rounded ${
-            activeTab === "patients" ? "bg-blue-600 text-white" : "bg-gray-200"
-          }`}
+          className={`px-4 py-2 rounded ${activeTab === "patients" ? "bg-blue-600 text-white" : "bg-gray-200"
+            }`}
         >
           Patients
         </button>
@@ -136,13 +130,12 @@ const filteredUsers =
                   {activeTab === "doctors" && (
                     <td className="border border-gray-300 px-4 py-2">
                       <span
-                        className={`px-2 py-1 rounded text-sm ${
-                          user.status === "verified"
-                            ? "bg-green-200 text-green-800"
-                            : user.status === "rejected"
+                        className={`px-2 py-1 rounded text-sm ${user.status === "verified"
+                          ? "bg-green-200 text-green-800"
+                          : user.status === "rejected"
                             ? "bg-red-200 text-red-800"
                             : "bg-yellow-200 text-yellow-800"
-                        }`}
+                          }`}
                       >
                         {user.status}
                       </span>
@@ -165,11 +158,11 @@ const filteredUsers =
                         >
                           Reject
                         </button>
-                                              <button
-                        onClick={() => handleDelete(user._id)}
-    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"                      >
-                        Block
-                      </button>
+                        <button
+                          onClick={() => handleDelete(user._id)}
+                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"                      >
+                          Block
+                        </button>
                       </div>
                     ) : (
                       <button

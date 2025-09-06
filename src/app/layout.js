@@ -7,7 +7,7 @@ import Footer from "@/components/Shared/Footer/Footer";
 import { Toaster } from "@/components/ui/sonner"
 
 // import { Toaster } from "react-hot-toast";
-import Nav from "@/app/components/Nav";
+// import Nav from "@/app/components/Nav";
 
 import NextAuthProvider from "@/providers/NextAuthProvider";
 import useHideNavbar from "./admin-dashboard/navbarControl/page";
