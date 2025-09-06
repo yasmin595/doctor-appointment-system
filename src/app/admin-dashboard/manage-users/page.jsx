@@ -1,18 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-
+import { toast } from "sonner";
 // ✅ Static sample data
 
 export default function Page() {
   const [users, setUsers] = useState([]);
-  const [activeTab, setActiveTab] = useState("doctors"); // doctors | patients
+  const [activeTab, setActiveTab] = useState("doctors"); 
 
 
     // Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch("/api/adminAuth/manageUsers"); // static or DB
+        const res = await fetch("/api/adminAuth/manageUsers"); 
         const data = await res.json();
         setUsers(data);
       } catch (err) {
@@ -24,20 +24,37 @@ export default function Page() {
     fetchUsers();
   }, []);
 
-  // ✅ Delete user
-  const handleDelete = (id) => {
-    if (!confirm("Are you sure you want to delete this user?")) return;
-    setUsers(users.filter((user) => user._id !== id));
-  };
 
-  // ✅ Update doctor status
-  const handleStatusChange = (id, newStatus) => {
-    setUsers((prev) =>
-      prev.map((user) =>
-        user._id === id ? { ...user, status: newStatus } : user
-      )
-    );
-  };
+
+// ✅ Delete user with toast confirmation
+const handleDelete = (id) => {
+  toast("Are you sure you want to delete this user?", {
+    action: {
+      label: "Yes, Delete",
+      onClick: () => {
+        setUsers((prev) => prev.filter((user) => user._id !== id));
+        toast.success("User deleted successfully ✅");
+      },
+    },
+    cancel: {
+      label: "Cancel",
+      onClick: () => toast.info("Delete cancelled ❌"),
+    },
+  });
+};
+
+// ✅ Update doctor status with toast
+const handleStatusChange = (id, newStatus) => {
+  setUsers((prev) =>
+    prev.map((user) =>
+      user._id === id ? { ...user, status: newStatus } : user
+    )
+  );
+
+  toast.success(
+    `Doctor status updated to "${newStatus}" successfully ✅`
+  );
+};
 
   // ✅ Filter users by tab
   const filteredUsers =
@@ -46,7 +63,7 @@ export default function Page() {
       : users.filter((u) => u.role !== "doctor");
 
   return (
-    <div className="p-6">
+    <div className="p-6 my-5">
       <h1 className="text-2xl font-bold mb-6">Manage Users</h1>
 
       {/* Tabs */}
@@ -130,13 +147,18 @@ export default function Page() {
                         >
                           Reject
                         </button>
+                                              <button
+                        onClick={() => handleDelete(user._id)}
+    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"                      >
+                        Block
+                      </button>
                       </div>
                     ) : (
                       <button
                         onClick={() => handleDelete(user._id)}
                         className="block w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
                       >
-                        Delete
+                        Block
                       </button>
                     )}
                   </td>
