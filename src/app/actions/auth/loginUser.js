@@ -5,7 +5,9 @@ import bcrypt from "bcrypt";
 export const loginUser = async (payload) => {
   const { email, password } = payload;
 
-  const userCollection = await dbConnect(collectionsNameObj.userCollection);
+  //const userCollection = await dbConnect(collectionsNameObj.userCollection);
+  const db = await dbConnect();
+  const userCollection = db.collection("test_user");
   const user = await userCollection.findOne({ email });
 
   if (!user) return null;
