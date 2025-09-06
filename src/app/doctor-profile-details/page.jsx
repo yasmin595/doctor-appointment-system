@@ -93,7 +93,7 @@ export default function DoctorProfileDetails() {
                 </div>
                 <div>
                   <label className="text-sm font-medium">Education</label>
-                  <Input
+                  <Input 
                     type="text"
                     defaultValue="Harvard Medical School"
                     disabled={!editing}
