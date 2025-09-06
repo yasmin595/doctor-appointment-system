@@ -1,7 +1,8 @@
 "use server";
 
-import dbConnect, { collectionsNameObj } from "@/database/dbConnect";
+import dbConnect from "@/database/dbConnect";
 import bcrypt from "bcrypt";
+
 
 export const registerUser = async (payload) => {
   try {
@@ -12,7 +13,9 @@ export const registerUser = async (payload) => {
       return { success: false, message: "Email and password are required" };
     }
 
-    const userCollection = await dbConnect(collectionsNameObj.userCollection);
+    //const userCollection = await dbConnect(collectionsNameObj.userCollection);
+    const db = await dbConnect();
+    const userCollection = db.collection("test_user");
 
     // Check if user already exists
     const existingUser = await userCollection.findOne({ email });

@@ -3,7 +3,8 @@ import { loginUser } from "@/app/actions/auth/loginUser";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
-import dbConnect, { collectionsNameObj } from "@/database/dbConnect";
+//import dbConnect, { collectionsNameObj } from "@/database/dbConnect";
+import dbConnect from "@/database/dbConnect";
 export const authOptions = {
     // Configure one or more authentication providers
     providers: [
@@ -48,7 +49,9 @@ export const authOptions = {
   callbacks: {
   async signIn({ user, account }) {
     if (account) {
-      const userCollection = await dbConnect(collectionsNameObj.userCollection);
+      //const userCollection = await dbConnect(collectionsNameObj.userCollection);
+      const db = await dbConnect();
+      const userCollection = db.collection("test_user");
       const isExisted = await userCollection.findOne({ providerAccountId: account.providerAccountId });
 
       if (!isExisted) {
