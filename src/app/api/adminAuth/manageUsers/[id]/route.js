@@ -1,3 +1,4 @@
+
 // ✅ DELETE a user by ID
 export async function DELETE(req, { params }) {
   try {
