@@ -1,10 +1,27 @@
 'use client'
 import React, { useState } from 'react';
 import Head from 'next/head';
+import NextAuthProvider from '@/providers/NextAuthProvider';
+import { useSession } from 'next-auth/react';
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import Link from 'next/link';
+import PatientFeedback from '@/components/HomePage/PatientFeedback/PatientFeedback';
+
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
-  
+
+  // const {data: session, status } = NextAuthProvider();
+
   // Sample data - in a real app this would come from API calls
   const dashboardData = {
     stats: {
@@ -27,7 +44,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="admin-dashboard mt-22 ">
+    <div className="admin-dashboard  ">
       <Head>
         <title>Admin Dashboard | Medical Platform</title>
         <meta name="description" content="Administrative dashboard for medical service management" />
@@ -35,15 +52,14 @@ export default function AdminDashboard() {
       
       <header className="dashboard-header">
         <h1>Admin Dashboard</h1>
-        <div className="user-info">
-          <span>Welcome, Admin</span>
-          <div className="avatar">
-            {
-              
-            }
-          </div>
-        </div>
+ 
       </header>
+
+             <div className="font-bold text-2xl text-center pt-5">
+          <span>Welcome, Admin</span>
+
+        </div>
+
       
       <div className="dashboard-container">
       
@@ -51,25 +67,25 @@ export default function AdminDashboard() {
         <main className="dashboard-content">
           <div className="stats-grid">
             <div className="stat-card">
-              <div className="stat-value">{dashboardData.stats.totalPatients}</div>
+              <div className="stat-value">{dashboardData.stats.totalPatients}+</div>
               <div className="stat-label">Total Patients</div>
               <div className="stat-trend">+12% from last month</div>
             </div>
             
             <div className="stat-card">
-              <div className="stat-value">{dashboardData.stats.newPatients}</div>
+              <div className="stat-value">{dashboardData.stats.newPatients}+</div>
               <div className="stat-label">New Patients This Week</div>
               <div className="stat-trend">+5 since yesterday</div>
             </div>
             
             <div className="stat-card">
-              <div className="stat-value">{dashboardData.stats.appointmentsToday}</div>
+              <div className="stat-value">{dashboardData.stats.appointmentsToday}+</div>
               <div className="stat-label">Appointments Today</div>
               <div className="stat-trend">8 completed so far</div>
             </div>
             
             <div className="stat-card">
-              <div className="stat-value">{dashboardData.stats.availableDoctors}</div>
+              <div className="stat-value">{dashboardData.stats.availableDoctors}+</div>
               <div className="stat-label">Available Doctors</div>
               <div className="stat-trend">2 on leave</div>
             </div>
@@ -78,31 +94,39 @@ export default function AdminDashboard() {
           <div className="content-grid">
             <div className="appointments-card">
               <h2>Today's Appointments</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Patient</th>
-                    <th>Doctor</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dashboardData.recentAppointments.map(appointment => (
-                    <tr key={appointment.id}>
-                      <td>{appointment.patient}</td>
-                      <td>{appointment.doctor}</td>
-                      <td>{appointment.time}</td>
-                      <td>
-                        <span className={`status-badge status-${appointment.status.toLowerCase().replace(' ', '-')}`}>
-                          {appointment.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <button className="view-all-btn">View All Appointments</button>
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Patient</TableHead>
+      <TableHead>Doctor</TableHead>
+      <TableHead>Time</TableHead>
+      <TableHead>Status</TableHead>
+    </TableRow>
+  </TableHeader>
+
+  <TableBody>
+    {dashboardData.recentAppointments.map((appointment) => (
+      <TableRow key={appointment.id}>
+        <TableCell>{appointment.patient}</TableCell>
+        <TableCell>{appointment.doctor}</TableCell>
+        <TableCell>{appointment.time}</TableCell>
+        <TableCell>
+          <span
+            className={`status-badge status-${appointment.status
+              .toLowerCase()
+              .replace(" ", "-")}`}
+          >
+            {appointment.status}
+          </span>
+        </TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+              <Link href={'/doctor-appointments'}>
+               <Button className="view-all-btn">View All Appointments</Button>
+              </Link>
+             
             </div>
             
             <div className="notifications-card">
@@ -117,6 +141,7 @@ export default function AdminDashboard() {
               <button className="view-all-btn">View All Notifications</button>
             </div>
           </div>
+          <PatientFeedback></PatientFeedback>
         </main>
       </div>
       
@@ -131,7 +156,7 @@ export default function AdminDashboard() {
           justify-content: space-between;
           align-items: center;
           padding: 1rem 2rem;
-      
+          font-size: 2.5rem;
           box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
@@ -142,7 +167,9 @@ export default function AdminDashboard() {
         
         .user-info {
           display: flex;
+          
           align-items: center;
+          font-size: 2.5rem;
           gap: 10px;
         }
         
