@@ -13,7 +13,7 @@ import {
     Dialog,
     DialogContent,
     DialogHeader,
-    DialogTitle, 
+    DialogTitle,
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
@@ -73,7 +73,7 @@ const AllDoctorPage = () => {
 
     return (
         <div className="max-w-6xl mx-auto p-6">
-            <h1 className="text-3xl font-bold text-center mb-6">All Doctors</h1>
+            <h1 className="text-3xl font-bold text-center text-background mb-6">All Doctors</h1>
 
             {/* Search & Sort Controls */}
             <div className="flex flex-col md:flex-row gap-4 justify-between mb-8">

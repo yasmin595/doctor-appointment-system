@@ -83,7 +83,7 @@ export default function DoctorAppointments() {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-6 min-h-screen pt-20 max-w-7xl mx-auto">
             <h1 className="text-2xl font-bold">Appointment Management</h1>
             <p className="text-gray-500 mb-4">Manage your patient appointments and prescriptions</p>
 
