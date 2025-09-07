@@ -49,21 +49,21 @@ export default function AdminDashboard() {
         <title>Admin Dashboard | Medical Platform</title>
         <meta name="description" content="Administrative dashboard for medical service management" />
       </Head>
-      
+
       <header className="dashboard-header">
         <h1>Admin Dashboard</h1>
- 
+
       </header>
 
-             <div className="font-bold text-2xl text-center pt-5">
-          <span>Welcome, Admin</span>
+      <div className="font-bold text-2xl text-center pt-5">
+        <span>Welcome, Admin</span>
 
-        </div>
+      </div>
 
-      
+
       <div className="dashboard-container">
-      
-        
+
+
         <main className="dashboard-content">
           <div className="stats-grid">
             <div className="stat-card">
@@ -71,64 +71,64 @@ export default function AdminDashboard() {
               <div className="stat-label">Total Patients</div>
               <div className="stat-trend">+12% from last month</div>
             </div>
-            
+
             <div className="stat-card">
               <div className="stat-value">{dashboardData.stats.newPatients}+</div>
               <div className="stat-label">New Patients This Week</div>
               <div className="stat-trend">+5 since yesterday</div>
             </div>
-            
+
             <div className="stat-card">
               <div className="stat-value">{dashboardData.stats.appointmentsToday}+</div>
               <div className="stat-label">Appointments Today</div>
               <div className="stat-trend">8 completed so far</div>
             </div>
-            
+
             <div className="stat-card">
               <div className="stat-value">{dashboardData.stats.availableDoctors}+</div>
               <div className="stat-label">Available Doctors</div>
               <div className="stat-trend">2 on leave</div>
             </div>
           </div>
-          
+
           <div className="content-grid">
             <div className="appointments-card">
               <h2>Today's Appointments</h2>
-<Table>
-  <TableHeader>
-    <TableRow>
-      <TableHead>Patient</TableHead>
-      <TableHead>Doctor</TableHead>
-      <TableHead>Time</TableHead>
-      <TableHead>Status</TableHead>
-    </TableRow>
-  </TableHeader>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Patient</TableHead>
+                    <TableHead>Doctor</TableHead>
+                    <TableHead>Time</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
 
-  <TableBody>
-    {dashboardData.recentAppointments.map((appointment) => (
-      <TableRow key={appointment.id}>
-        <TableCell>{appointment.patient}</TableCell>
-        <TableCell>{appointment.doctor}</TableCell>
-        <TableCell>{appointment.time}</TableCell>
-        <TableCell>
-          <span
-            className={`status-badge status-${appointment.status
-              .toLowerCase()
-              .replace(" ", "-")}`}
-          >
-            {appointment.status}
-          </span>
-        </TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
+                <TableBody>
+                  {dashboardData.recentAppointments.map((appointment) => (
+                    <TableRow key={appointment.id}>
+                      <TableCell>{appointment.patient}</TableCell>
+                      <TableCell>{appointment.doctor}</TableCell>
+                      <TableCell>{appointment.time}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`status-badge status-${appointment.status
+                            .toLowerCase()
+                            .replace(" ", "-")}`}
+                        >
+                          {appointment.status}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
               <Link href={'/doctor-appointments'}>
-               <Button className="view-all-btn">View All Appointments</Button>
+                <Button className="view-all-btn">View All Appointments</Button>
               </Link>
-             
+
             </div>
-            
+
             <div className="notifications-card">
               <h2>Notifications</h2>
               <ul>
@@ -144,7 +144,7 @@ export default function AdminDashboard() {
           <PatientFeedback></PatientFeedback>
         </main>
       </div>
-      
+
       <style jsx>{`
         .admin-dashboard {
           min-height: 100vh;

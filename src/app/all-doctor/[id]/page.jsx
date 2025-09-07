@@ -19,15 +19,15 @@ const PaymentForConfirmF = () => {
 
         setLoading(true)
         try {
-            const res = await fetch("/api/init-payment", {
+            const res = await fetch("/api/payment/init", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ amount }),
             })
 
             const data = await res.json()
-            if (data.GatewayPageURL) {
-                window.location.href = data.GatewayPageURL // Redirect to SSLCommerz Gateway
+            if (data?.url) {
+                window.location.href = data.url // Redirect to SSLCommerz Gateway
             } else {
                 alert("Failed to create payment session.")
             }
@@ -39,31 +39,39 @@ const PaymentForConfirmF = () => {
     }
 
     return (
-        <div className="flex justify-center items-center min-h-screen p-4 bg-gradient-to-br from-blue-50 to-gray-100">
-            <Card className="w-full max-w-md shadow-2xl rounded-2xl">
+        <div className="flex justify-center items-center min-h-screen p-4 bg-gradient-to-br from-blue-50 via-white to-gray-100">
+            <Card className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-center">
+                    <CardTitle className="text-2xl font-bold text-center text-blue-600">
                         Confirm Payment
                     </CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="amount">Fee (BDT)</Label>
+                        <Label htmlFor="amount" className="text-gray-700">
+                            Consultation Fee (BDT)
+                        </Label>
                         <Input
                             id="amount"
                             type="number"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="Enter amount"
-                            className="focus:ring-2 focus:ring-blue-400"
+                            className="focus:ring-2 focus:ring-blue-400 rounded-xl"
                         />
                     </div>
                 </CardContent>
 
-                <CardFooter className="flex justify-between">
-                    <Link href={'/all-doctor'} variant="outline">Cancel</Link>
-                    <Button onClick={handlePayment} disabled={loading}>
+                <CardFooter className="flex justify-between gap-4">
+                    <Button asChild variant="outline" className="w-1/2 rounded-xl">
+                        <Link href="/all-doctor">Cancel</Link>
+                    </Button>
+                    <Button
+                        onClick={handlePayment}
+                        disabled={loading}
+                        className="w-1/2 rounded-xl bg-blue-600 hover:bg-blue-700 transition-all"
+                    >
                         {loading ? "Processing..." : "Pay Now"}
                     </Button>
                 </CardFooter>
