@@ -150,15 +150,9 @@ export default function Navbar() {
                     >
                       Register
                     </Link>
-<<<<<<< HEAD
-                    <div>
-                      <ModeToggle></ModeToggle>
-                    </div>
-=======
 
                       <ModeToggle></ModeToggle>
 
->>>>>>> 0a05a623651314bcefaa83cb503837e874601af8
                   </li>
                 </>
               )}
