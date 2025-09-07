@@ -1,0 +1,95 @@
+[
+    {
+        "id": 1,
+        "name": "Dr. Ayesha Akter",
+        "email": "ayesha.akter@example.com",
+        "phone": "+8801712345678",
+        "specialization": "Cardiologist",
+        "bio": "Dr. Ayesha Akter is an experienced cardiologist with a passion for patient care and advanced heart treatments.",
+        "location": "Rangpur Medical College",
+        "experience": "10 years",
+        "consultationFee": 800,
+        "rating": 0,
+        "profilePicture": "https://i.ibb.co.com/1YP3FPZ6/afdadf665ba0aa7f487b93a197da8949.jpg",
+        "certificates": [
+            "MBBS",
+            "MD (Cardiology)"
+        ],
+        "availability": {
+            "Monday": [
+                "10:00 AM - 12:00 PM",
+                "4:00 PM - 6:00 PM"
+            ],
+            "Wednesday": [
+                "10:00 AM - 12:00 PM",
+                "4:00 PM - 6:00 PM"
+            ],
+            "Friday": [
+                "10:00 AM - 12:00 PM",
+                "4:00 PM - 6:00 PM"
+            ]
+        },
+        "appointments": []
+    },
+    {
+        "id": 2,
+        "name": "Dr. Mahmud Hasan",
+        "email": "mahmud.hasan@example.com",
+        "phone": "+8801812345678",
+        "specialization": "Dermatologist",
+        "bio": "Dr. Mahmud Hasan specializes in skin, hair, and nail disorders, offering modern treatments for patients of all ages.",
+        "location": "Dhaka Medical College",
+        "experience": "7 years",
+        "consultationFee": 600,
+        "rating": 0,
+        "profilePicture": "https://i.ibb.co.com/4DzN5sM/cute-boy-doctor-cartoon-on-white-background-free-vector.jpg",
+        "certificates": [
+            "MBBS",
+            "DDV (Dermatology)"
+        ],
+        "availability": {
+            "Tuesday": [
+                "11:00 AM - 1:00 PM",
+                "3:00 PM - 5:00 PM"
+            ],
+            "Thursday": [
+                "11:00 AM - 1:00 PM"
+            ],
+            "Saturday": [
+                "2:00 PM - 5:00 PM"
+            ]
+        },
+        "appointments": []
+    },
+    {
+        "id": 3,
+        "name": "Dr. Nusrat Jahan",
+        "email": "nusrat.jahan@example.com",
+        "phone": "+8801912345678",
+        "specialization": "Pediatrician",
+        "bio": "Dr. Nusrat Jahan is a pediatrician dedicated to children's health, ensuring comprehensive care for newborns to adolescents.",
+        "location": "Chattogram Medical College",
+        "experience": "12 years",
+        "consultationFee": 500,
+        "rating": 0,
+        "profilePicture": "https://i.ibb.co.com/ychq34wC/pngtree-cute-female-doctor-png-image-16670357.png",
+        "certificates": [
+            "MBBS",
+            "FCPS (Pediatrics)"
+        ],
+        "availability": {
+            "Sunday": [
+                "9:00 AM - 11:00 AM",
+                "5:00 PM - 7:00 PM"
+            ],
+            "Tuesday": [
+                "9:00 AM - 11:00 AM",
+                "5:00 PM - 7:00 PM"
+            ],
+            "Thursday": [
+                "9:00 AM - 11:00 AM"
+            ]
+        },
+        "appointments": []
+    }
+]
