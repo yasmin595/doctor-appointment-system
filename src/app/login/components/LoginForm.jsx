@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { signIn } from "next-auth/react";
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -9,19 +8,25 @@ import SocialLogin from "./SocialLogin";
 
 export default function LoginForm() {
   const router = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
+    const role = form.role.value; // role value collect করলাম
+
     toast("Submitting ....");
     try {
       const response = await signIn("credentials", {
         email,
         password,
+        role, // role পাঠালাম
         callbackUrl: "/",
         redirect: false,
       });
+      console.log(response);
+
       if (response.ok) {
         toast.success("Logged In successfully");
         router.push("/");
@@ -29,14 +34,15 @@ export default function LoginForm() {
       } else {
         toast.error("FAILED to Log In");
       }
-      //console.log({ email, password });
     } catch (error) {
       console.log(error);
       toast.error("FAILED to Log In");
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-8">
+      {/* Email */}
       <label className="form-control w-full">
         <div className="label w-full">
           <span className="label-text  font-bold">Email</span>
@@ -48,6 +54,8 @@ export default function LoginForm() {
           className="input input-bordered w-full"
         />
       </label>
+
+      {/* Password */}
       <label className="form-control w-full">
         <div className="label w-full">
           <span className="label-text font-bold">Password</span>
@@ -59,11 +67,34 @@ export default function LoginForm() {
           className="input input-bordered w-full"
         />
       </label>
+
+      {/* Role Selector */}
+      <label className="form-control w-full">
+        <div className="label w-full">
+          <span className="label-text font-bold">Role</span>
+        </div>
+        <select
+          name="role"
+          className="select select-bordered w-full"
+          defaultValue=""
+          required
+        >
+          <option value="" disabled>
+            Select your role
+          </option>
+          <option value="Doctor">Doctor</option>
+          <option value="Patient">Patient</option>
+        </select>
+      </label>
+
+      {/* Submit Button */}
       <button className="w-full h-12 bg-orange-500 text-white font-bold">
         Sign In
       </button>
+
       <p className="text-center">Or Sign In with</p>
       <SocialLogin />
+
       <p className="text-center">
         Already have an account?{" "}
         <Link href="/register" className="text-orange-500 font-bold">
