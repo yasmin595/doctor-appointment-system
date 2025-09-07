@@ -56,33 +56,19 @@ export default function PatientFeedback() {
                   </AvatarFallback>
                 </Avatar>
 
-<<<<<<< Updated upstream
-              {/* Star Rating */}
-              <div className="flex items-center mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-5 h-5 ${i < fb.rating ? "text-yellow-400" : "text-gray-300 dark:text-gray-600"
-                      }`}
-                  />
-                ))}
-              </div>
-=======
                 {/* Star Rating */}
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-5 h-5 ${
-                        i < fb.rating
-                          ? "text-yellow-400 fill-yellow-400"
-                          : "text-gray-300 dark:text-gray-600"
-                      }`}
+                      className={`w-5 h-5 ${i < fb.rating
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-300 dark:text-gray-600"
+                        }`}
                     />
                   ))}
                 </div>
               </CardHeader>
->>>>>>> Stashed changes
 
               <CardContent className="flex flex-col items-center gap-2">
                 {/* Comment */}

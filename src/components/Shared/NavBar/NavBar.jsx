@@ -4,11 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Logo from "../Logo/Logo";
-<<<<<<< HEAD
-=======
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
->>>>>>> 2100b2040d740d4e804e69d65030991a84be1fca
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function Navbar() {
@@ -36,9 +33,8 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-green-50 dark:bg-gray-900 shadow-md" : "bg-transparent"
-      }`}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-green-50 dark:bg-gray-900 shadow-md" : "bg-transparent"
+        }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
@@ -52,13 +48,12 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm lg:text-base transition font-medium ${
-                scrolled
+              className={`text-sm lg:text-base transition font-medium ${scrolled
                   ? isActive(link.href)
                     ? "text-green-700 dark:text-green-400 font-semibold"
                     : "hover:text-green-700 dark:hover:text-green-400"
                   : "text-white hover:text-gray-200 dark:hover:text-gray-300"
-              }`}
+                }`}
             >
               {link.name}
             </Link>
@@ -155,9 +150,9 @@ export default function Navbar() {
                     >
                       Register
                     </Link>
-                    <li>
+                    <div>
                       <ModeToggle></ModeToggle>
-                    </li>
+                    </div>
                   </li>
                 </>
               )}

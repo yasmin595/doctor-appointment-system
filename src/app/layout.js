@@ -35,22 +35,6 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-<<<<<<< Updated upstream
-    <NextAuthProvider>
-            <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-           <NavBar></NavBar>
-          {/* {!hideNavbar && (
-          <NavBar></NavBar>
-      )} */}
-       
-         <main className=" flex-1"> {children}</main>
-           <Toaster richColors />
-=======
         <NextAuthProvider>
           <ThemeProvider
             attribute="class"
@@ -61,7 +45,6 @@ export default function RootLayout({ children }) {
             <NavBar></NavBar>
             <main className=" flex-1"> {children}</main>
             <Toaster richColors />
->>>>>>> Stashed changes
             <Footer></Footer>
           </ThemeProvider>
         </NextAuthProvider>
