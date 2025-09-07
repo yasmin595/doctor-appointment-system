@@ -1,10 +1,10 @@
 // "use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
 import NavBar from "@/components/Shared/NavBar/NavBar";
 import Footer from "@/components/Shared/Footer/Footer";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 
 // import { Toaster } from "react-hot-toast";
 // import Nav from "@/app/components/Nav";
@@ -35,6 +35,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+<<<<<<< Updated upstream
     <NextAuthProvider>
             <ThemeProvider
           attribute="class"
@@ -49,9 +50,21 @@ export default function RootLayout({ children }) {
        
          <main className=" flex-1"> {children}</main>
            <Toaster richColors />
+=======
+        <NextAuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NavBar></NavBar>
+            <main className=" flex-1"> {children}</main>
+            <Toaster richColors />
+>>>>>>> Stashed changes
             <Footer></Footer>
-        </ThemeProvider>
-      </NextAuthProvider>
+          </ThemeProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

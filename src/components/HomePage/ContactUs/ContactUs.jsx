@@ -1,6 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -15,7 +20,6 @@ export default function ContactUs() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you can add API call to send form data
     alert(`Thank you, ${formData.name}! Your message has been received.`);
     setFormData({ name: "", email: "", message: "" });
   };
@@ -32,43 +36,50 @@ export default function ContactUs() {
 
         <div className="flex flex-col md:flex-row gap-8 max-w-6xl mx-auto">
           {/* Contact Form */}
-          <div className="flex-1 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <input
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-900 dark:text-white"
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="Your Email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-900 dark:text-white"
-              />
-              <textarea
-                name="message"
-                placeholder="Your Message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                rows={5}
-                className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-gray-900 dark:text-white"
-              />
-              <button
-                type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-md transition"
-              >
-                Send Message
-              </button>
-            </form>
-          </div>
+          <Card className="flex-1">
+            <CardContent className="p-6">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div>
+                  <Label htmlFor="name">Your Name</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="email">Your Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="message">Your Message</Label>
+                  <Textarea
+                    id="message"
+                    name="message"
+                    rows={5}
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                  Send Message
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

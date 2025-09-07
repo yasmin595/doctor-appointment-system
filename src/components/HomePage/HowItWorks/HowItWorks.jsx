@@ -1,7 +1,8 @@
 "use client";
 
-import { Calendar, Search, CreditCard, Stethoscope } from "lucide-react"; // lucide-react icons
 import React from "react";
+import { Calendar, Search, CreditCard, Stethoscope } from "lucide-react";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 const steps = [
   {
@@ -42,20 +43,24 @@ export default function HowItWorks() {
         {/* Steps Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step) => (
-            <div
+            <Card
               key={step.id}
-              className="flex flex-col items-center bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 hover:shadow-lg transition"
+              className="flex flex-col items-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-lg transition text-center"
             >
-              <div className="mb-4 flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-700">
-                {step.icon}
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-                {step.title}
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                {step.description}
-              </p>
-            </div>
+              <CardHeader className="flex flex-col items-center mb-4">
+                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-700 mb-2">
+                  {step.icon}
+                </div>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                  {step.title}
+                </h3>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {step.description}
+                </p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
