@@ -153,9 +153,9 @@ export default function Navbar() {
                     >
                       Register
                     </Link>
-                    <li>
+
                       <ModeToggle></ModeToggle>
-                    </li>
+
                   </li>
                 </>
               )}
