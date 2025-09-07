@@ -17,7 +17,7 @@ const PaymentForConfirmF = () => {
 
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="amount">Amount</Label>
+                        <Label htmlFor="amount">Fee</Label>
                         <Input id="amount" type="number" placeholder="Enter amount" />
                     </div>
 
