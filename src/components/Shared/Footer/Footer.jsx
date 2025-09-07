@@ -22,7 +22,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm">
             {[
               { name: "Home", href: "/" },
-              { name: "All Doctors", href: "/alldoctors" },
+              { name: "All Doctors", href: "/all-doctor" },
               { name: "Services", href: "/services" },
               { name: "Dashboard", href: "/dashboard" },
               { name: "About", href: "/about" },
