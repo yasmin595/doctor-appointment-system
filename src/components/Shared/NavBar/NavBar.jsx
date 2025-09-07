@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Logo from "../Logo/Logo";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -33,11 +34,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-green-50 dark:bg-gray-900 shadow-md"
-          : "bg-transparent"
-      }`}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
+        ? "bg-green-50 dark:bg-gray-900 shadow-md"
+        : "bg-transparent"
+        }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
@@ -51,11 +51,10 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`transition ${
-                  isActive(link.href)
-                    ? "text-green-700 dark:text-green-400 font-semibold"
-                    : "hover:text-green-700 dark:hover:text-green-400"
-                }`}
+                className={`transition ${isActive(link.href)
+                  ? "text-green-700 dark:text-green-400 font-semibold"
+                  : "hover:text-green-700 dark:hover:text-green-400"
+                  }`}
               >
                 {link.name}
               </Link>
@@ -90,11 +89,10 @@ export default function Navbar() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`block px-2 py-1 rounded ${
-                      isActive(link.href)
-                        ? "bg-green-100 dark:bg-green-700 font-semibold"
-                        : "hover:bg-green-100 dark:hover:bg-gray-700"
-                    }`}
+                    className={`block px-2 py-1 rounded ${isActive(link.href)
+                      ? "bg-green-100 dark:bg-green-700 font-semibold"
+                      : "hover:bg-green-100 dark:hover:bg-gray-700"
+                      }`}
                   >
                     {link.name}
                   </Link>
