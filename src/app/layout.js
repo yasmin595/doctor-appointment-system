@@ -29,7 +29,7 @@ const geistMono = Geist_Mono({
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
@@ -48,9 +48,8 @@ export default function RootLayout({ children }) {
 
             {/* Toast */}
             <Toaster richColors />
-
             {/* Footer */}
-            <Footer />
+            {/* <Footer /> */}
           </ThemeProvider>
         </NextAuthProvider>
       </body>
