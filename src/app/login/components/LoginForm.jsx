@@ -103,10 +103,10 @@ export default function LoginForm() {
         type="submit"
         className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition"
       >
-        Sign In
+        Login
       </button>
 
-      <p className="text-center text-gray-600 dark:text-gray-300">Or sign in with</p>
+      <p className="text-center text-gray-600 dark:text-gray-300">Or login with</p>
       <SocialLogin />
 
       <p className="text-center text-gray-700 dark:text-gray-200">
