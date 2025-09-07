@@ -7,9 +7,9 @@ export default function RegisterPage() {
   return (
     <>
       {/* Page Title */}
-      <h1 className="text-3xl font-bold text-center my-8 text-gray-800">
+      {/* <h1 className="text-3xl font-bold text-center my-8 text-gray-800">
         Register
-      </h1>
+      </h1> */}
 
       {/* Main Section */}
       <section className="container mx-auto grid grid-cols-12 gap-6 px-4 md:px-8">
