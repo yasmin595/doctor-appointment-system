@@ -27,7 +27,10 @@ export default function HealthAssistantPage() {
         { name: "Dr. Tom Wilson", specialty: "Psychiatry", rating: 4.6, location: "Mental Health Center", availability: "Next week" }
     ];
     const analyzeSymptoms = async () => {
-        if (!symptoms.trim()) return;
+        //if (!symptoms.trim()) return;
+        if (!symptoms.trim()) {
+        return toast.error("Please enter your symptoms before analyzing.");
+       }
 
         setIsAnalyzing(true);
 
@@ -39,28 +42,27 @@ export default function HealthAssistantPage() {
             });
 
             const data = await res.json();
-            //console.log(data)
+            console.log("data", data);
 
-            const aiContent = data?.choices?.[0]?.message?.content || "";
-
-            const aiJson = JSON.parse(aiContent);
-            //console.log(aiJson)
+            const aiContent = JSON.parse((data?.choices?.[0]?.message?.content || "").replace(/```(json)?/g, "").trim());
+            console.log("aiContent", aiContent);
             // Map the parsed JSON to your analysis format
             const parsedAnalysis = {
-                condition: aiJson.condition || "Unknown condition",
-                severity: aiJson.severity || "medium",
-                confidence: aiJson.confidence || 0,
-                symptoms: aiJson.symptoms
-                    ? aiJson.symptoms.split(",").map(s => s.trim())
-                    : symptoms.split(",").map(s => s.trim()),
-                recommendations: aiJson.recommendations
-                    ? aiJson.recommendations.split(",").map(r => r.trim())
-                    : [],
-                specialist: aiJson.recommended_specialist_department || ["General Doctor"],
+                condition: aiContent.condition || "Unknown condition",
+                severity: aiContent.severity || "medium",
+                confidence: aiContent.confidence || 0,
+                symptoms: (aiContent.symptoms
+                    ? aiContent.symptoms.split(",").map(s => s.trim())
+                    : symptoms.split(",").map(s => s.trim())) || ["No symptoms identified"],
+                recommendations: aiContent.recommendations
+                    ? aiContent.recommendations.split(",").map(r => r.trim())
+                    : ["Please provide specific symptoms for a proper analysis."],
+                specialist: aiContent.recommended_specialist_department || ["General Doctor"],
             };
+            console.log(parsedAnalysis)
 
             const recommendedDoctors = mockDoctors.filter(doctor =>
-                aiJson.recommended_specialist_department?.some(
+                aiContent.recommended_specialist_department?.some(
                     dept => dept.toLowerCase() === doctor.specialty.toLowerCase()
                 )
             );
@@ -71,8 +73,9 @@ export default function HealthAssistantPage() {
 
 
         } catch (err) {
-            console.error(err);
+            
             toast.error("Failed to analyze symptoms. Please try again.");
+            console.error(err);
             setAnalysis({
                 severity: "low",
                 condition: "Could not analyze",
