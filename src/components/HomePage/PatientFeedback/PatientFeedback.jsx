@@ -61,11 +61,10 @@ export default function PatientFeedback() {
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-5 h-5 ${
-                        i < fb.rating
-                          ? "text-yellow-400 fill-yellow-400"
-                          : "text-gray-300 dark:text-gray-600"
-                      }`}
+                      className={`w-5 h-5 ${i < fb.rating
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-300 dark:text-gray-600"
+                        }`}
                     />
                   ))}
                 </div>
