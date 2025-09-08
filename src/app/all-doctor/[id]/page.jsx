@@ -1,26 +1,45 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import axios from "axios";
-import { useParams } from "next/navigation";
 
-const PaymentForConfirmF = ({ doctor }) => {
+const PaymentForConfirmF = ({ params }) => {
+    // const params = use(params);
     const [loading, setLoading] = useState(false);
-    const params = useParams();
-    const doctorId = { params }
+    const [doctor, setDoctor] = useState(null);
+    const id = params.id
+    console.log(doctor);
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         phone: "",
         transactionId: "",
         status: "Pending",
-        date: new Date().toISOString().split("T")[0], // YYYY-MM-DD
+        date: new Date().toISOString().split("T")[0],
     });
 
-    // if (!doctor) return <p className="text-center mt-10">No doctor selected.</p>;
+    useEffect(() => {
+        fetch("/doctor.json")
+            .then(res => res.json())
+            .then(data => {
+                const singleDoctor = data.find(d => d.id == id);
+                setDoctor(singleDoctor); // ✅ Add this
+                if (singleDoctor) {
+                    setFormData(prev => ({
+                        ...prev,
+                        name: singleDoctor.name,
+                        email: singleDoctor.email,
+                        phone: singleDoctor.phone
+                    }));
+                }
+            });
+    }, [id]);
+    ;
+
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,19 +49,18 @@ const PaymentForConfirmF = ({ doctor }) => {
         e.preventDefault();
         setLoading(true);
 
-        try { 
+        try {
             const payload = {
                 ...formData,
-                amount: doctor,
-                doctorId: doctor.id,
-                doctorName: doctor.name,
+                amount: doctor?.consultationFee,
+                doctorId: doctor?.id,
+                doctorName: doctor?.name,
             };
 
-            // Call backend to initialize SSLCommerz payment
-            const res = await axios.post("/api/payment/init", payload);
+            const res = await axios.post("/api/payment", payload);
 
             if (res.data?.url) {
-                window.location.href = res.data.url; // Redirect to SSLCommerz Gateway
+                window.location.href = res.data.url;
             } else {
                 alert("Failed to create payment session.");
             }
@@ -59,7 +77,7 @@ const PaymentForConfirmF = ({ doctor }) => {
             <Card className="w-full max-w-md shadow-xl rounded-2xl border border-gray-200">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold text-center text-blue-600">
-                        Confirm Payment
+                        Confirm Payment for {doctor?.name}
                     </CardTitle>
                 </CardHeader>
 
@@ -113,9 +131,9 @@ const PaymentForConfirmF = ({ doctor }) => {
                             <input
                                 type="number"
                                 name="amount"
-                                value={doctor}
+                                value={doctor?.consultationFee}
                                 readOnly
-                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
+                                className="w-full border rounded-lg px-3 py-2"
                             />
                         </div>
 
@@ -125,45 +143,19 @@ const PaymentForConfirmF = ({ doctor }) => {
                             <input
                                 type="text"
                                 name="transactionId"
-                                value={formData.transactionId}
+                                value={formData?.transactionId}
                                 onChange={handleChange}
                                 placeholder="Leave empty, will be handled in backend"
                                 className="w-full border rounded-lg px-3 py-2"
                             />
                         </div>
 
-                        {/* Date */}
-                        <div className="space-y-2">
-                            <label className="font-semibold">Date</label>
-                            <input
-                                type="date"
-                                name="date"
-                                value={formData.date}
-                                onChange={handleChange}
-                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
-                                readOnly
-                            />
-                        </div>
-
-                        {/* Status */}
-                        <div className="space-y-2">
-                            <label className="font-semibold">Status</label>
-                            <input
-                                type="text"
-                                name="status"
-                                value={formData.status}
-                                readOnly
-                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
-                            />
-                        </div>
-
-                        {/* Submit Button */}
                         <Button
                             type="submit"
                             disabled={loading}
                             className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 transition-all"
                         >
-                            {loading ? "Processing..." : `Pay ৳${doctor}`}
+                            {loading ? "Processing..." : `Pay ৳${doctor?.consultationFee}`}
                         </Button>
                     </form>
                 </CardContent>

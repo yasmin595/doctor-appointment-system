@@ -6,62 +6,87 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-const PaymentForm = ({ doctor, onSubmit, loading }) => {
+const PaymentForm = ({ doctor, loading }) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     if (!doctor) return null; // Prevent crash if doctor is undefined
-
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        transactionId: "",
+        status: "Pending",
+        date: new Date().toISOString().split("T")[0],
+    });
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Full Name */}
+        <form onSubmit={handlePayment} className="space-y-4">
+            {/* Name */}
             <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                    id="name"
+                <label className="font-semibold">Full Name</label>
+                <input
                     type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     placeholder="Enter your full name"
-                    {...register("name", { required: "Full name is required" })}
+                    required
+                    className="w-full border rounded-lg px-3 py-2"
                 />
-                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
             </div>
 
             {/* Email */}
             <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                    id="email"
+                <label className="font-semibold">Email</label>
+                <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder="Enter your email"
-                    {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: "Invalid email address",
-                        },
-                    })}
+                    required
+                    className="w-full border rounded-lg px-3 py-2"
                 />
-                {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
             </div>
 
             {/* Phone */}
             <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                    id="phone"
+                <label className="font-semibold">Phone</label>
+                <input
                     type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
                     placeholder="Enter your phone number"
-                    {...register("phone", { required: "Phone number is required" })}
+                    required
+                    className="w-full border rounded-lg px-3 py-2"
                 />
-                {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
             </div>
 
-            {/* Amount (readonly) */}
+            {/* Total Price */}
             <div className="space-y-2">
-                <Label>Amount (BDT)</Label>
-                <Input
+                <label className="font-semibold">Total Price (BDT)</label>
+                <input
                     type="number"
-                    value={doctor.consultationFee}
+                    name="amount"
+                    value={doctor?.consultationFee}
                     readOnly
+                    className="w-full border rounded-lg px-3 py-2"
+                />
+            </div>
+
+            {/* Transaction ID */}
+            <div className="space-y-2">
+                <label className="font-semibold">Transaction ID</label>
+                <input
+                    type="text"
+                    name="transactionId"
+                    value={formData?.transactionId}
+                    onChange={handleChange}
+                    placeholder="Leave empty, will be handled in backend"
+                    className="w-full border rounded-lg px-3 py-2"
                 />
             </div>
 
@@ -70,7 +95,7 @@ const PaymentForm = ({ doctor, onSubmit, loading }) => {
                 disabled={loading}
                 className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 transition-all"
             >
-                {loading ? "Processing..." : `Pay ৳${doctor.consultationFee}`}
+                {loading ? "Processing..." : `Pay ৳${doctor?.consultationFee}`}
             </Button>
         </form>
     );
