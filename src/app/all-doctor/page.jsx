@@ -30,6 +30,7 @@ const AllDoctorPage = () => {
 
     const handleConfirm = (doctorId) => {
         router.push(`/all-doctor/${doctorId}`);
+        console.log(doctorId);
     };
 
     useEffect(() => {
@@ -204,7 +205,7 @@ const AllDoctorPage = () => {
                             <DialogFooter>
                                 <Button
                                     className="w-full"
-                                    onClick={handleConfirm}
+                                    onClick={() => handleConfirm(selectedDoctor.id)}
                                 >
                                     Confirm Booking
                                 </Button>
