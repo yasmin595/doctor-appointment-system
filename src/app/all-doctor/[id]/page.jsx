@@ -30,7 +30,7 @@ const PaymentForConfirmF = ({ doctor }) => {
         e.preventDefault();
         setLoading(true);
 
-        try {
+        try { 
             const payload = {
                 ...formData,
                 amount: doctor,
