@@ -102,13 +102,12 @@ export default function AdminDashboard() {
                     <TableCell>{appointment.time}</TableCell>
                     <TableCell>
                       <span
-                        className={`px-2 py-1 rounded text-xs font-medium ${
-                          appointment.status === "Completed"
-                            ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"
-                            : appointment.status === "In Progress"
+                        className={`px-2 py-1 rounded text-xs font-medium ${appointment.status === "Completed"
+                          ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"
+                          : appointment.status === "In Progress"
                             ? "bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300"
                             : "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
-                        }`}
+                          }`}
                       >
                         {appointment.status}
                       </span>
@@ -129,11 +128,10 @@ export default function AdminDashboard() {
               {dashboardData.notifications.map((notification) => (
                 <li
                   key={notification.id}
-                  className={`p-3 rounded-lg border ${
-                    notification.priority === "high"
-                      ? "border-red-400 text-red-600 dark:border-red-600 dark:text-red-400"
-                      : "border-yellow-400 text-yellow-600 dark:border-yellow-600 dark:text-yellow-400"
-                  }`}
+                  className={`p-3 rounded-lg border ${notification.priority === "high"
+                    ? "border-red-400 text-red-600 dark:border-red-600 dark:text-red-400"
+                    : "border-yellow-400 text-yellow-600 dark:border-yellow-600 dark:text-yellow-400"
+                    }`}
                 >
                   {notification.message}
                 </li>

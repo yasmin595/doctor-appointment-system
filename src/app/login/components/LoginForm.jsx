@@ -26,6 +26,7 @@ export default function LoginForm() {
         callbackUrl: "/",
         redirect: false,
       });
+      console.log(response);
 
       if (response.ok) {
         toast.success("Logged In successfully");
