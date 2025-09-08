@@ -5,9 +5,12 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import axios from "axios";
+import { useParams } from "next/navigation";
 
 const PaymentForConfirmF = ({ doctor }) => {
     const [loading, setLoading] = useState(false);
+    const params = useParams();
+    const doctorId = { params }
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -30,7 +33,7 @@ const PaymentForConfirmF = ({ doctor }) => {
         try {
             const payload = {
                 ...formData,
-                amount: doctor.consultationFee,
+                amount: doctor,
                 doctorId: doctor.id,
                 doctorName: doctor.name,
             };
@@ -110,7 +113,7 @@ const PaymentForConfirmF = ({ doctor }) => {
                             <input
                                 type="number"
                                 name="amount"
-                                value={doctor.consultationFee}
+                                value={doctor}
                                 readOnly
                                 className="w-full border rounded-lg px-3 py-2 bg-gray-100"
                             />
@@ -160,7 +163,7 @@ const PaymentForConfirmF = ({ doctor }) => {
                             disabled={loading}
                             className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 transition-all"
                         >
-                            {loading ? "Processing..." : `Pay ৳${doctor.consultationFee}`}
+                            {loading ? "Processing..." : `Pay ৳${doctor}`}
                         </Button>
                     </form>
                 </CardContent>
