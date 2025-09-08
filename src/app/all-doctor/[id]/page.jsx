@@ -11,7 +11,7 @@ const PaymentForConfirmF = ({ params }) => {
     const [loading, setLoading] = useState(false);
     const [doctor, setDoctor] = useState(null);
     const id = params.id
-    console.log(doctor);
+    console.log(id);
 
     const [formData, setFormData] = useState({
         name: "",
