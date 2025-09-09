@@ -7,6 +7,7 @@ import FAQSection from './FAQSection/FAQSection'
 import ContactUs from './ContactUs/ContactUs'
 
 export default function HomePage() {
+
   return (
     <div className="flex flex-col">
       {/* Banner Section */}
