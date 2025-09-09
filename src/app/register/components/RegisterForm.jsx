@@ -47,7 +47,6 @@ export default function RegisterForm() {
         rating: 0,
         certificates: form.certificates?.value ? [form.certificates.value] : [],
         availability: {},
-        appointments: [],
         isVerified: false,
       };
     }
