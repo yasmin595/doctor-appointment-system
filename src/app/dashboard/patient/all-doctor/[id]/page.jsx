@@ -5,21 +5,16 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const PaymentForConfirmF = ({ params }) => {
-    // const params = use(params);
+    const { data: session, status } = useSession();
     const [loading, setLoading] = useState(false);
     const [doctor, setDoctor] = useState(null);
-    const id = params.id
-    console.log(id);
+    const id = params.id;
 
     const [formData, setFormData] = useState({
-        name: "",
-        email: "",
         phone: "",
-        transactionId: "",
-        status: "Pending",
-        date: new Date().toISOString().split("T")[0],
     });
 
     useEffect(() => {
@@ -27,19 +22,9 @@ const PaymentForConfirmF = ({ params }) => {
             .then(res => res.json())
             .then(data => {
                 const singleDoctor = data.find(d => d.id == id);
-                setDoctor(singleDoctor); // ✅ Add this
-                if (singleDoctor) {
-                    setFormData(prev => ({
-                        ...prev,
-                        name: singleDoctor.name,
-                        email: singleDoctor.email,
-                        phone: singleDoctor.phone
-                    }));
-                }
+                setDoctor(singleDoctor);
             });
     }, [id]);
-    ;
-
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -49,20 +34,28 @@ const PaymentForConfirmF = ({ params }) => {
         e.preventDefault();
         setLoading(true);
 
+        if (!doctor || !session?.user) {
+            alert("Doctor or User not found!");
+            setLoading(false);
+            return;
+        }
+
+        const payload = {
+            name: session.user.name,
+            email: session.user.email,
+            phone: formData.phone,
+            amount: doctor.consultationFee,
+            doctorId: doctor.id,
+            doctorName: doctor.name,
+        };
+
         try {
-            const payload = {
-                ...formData,
-                amount: doctor?.consultationFee,
-                doctorId: doctor?.id,
-                doctorName: doctor?.name,
-            };
-
             const res = await axios.post("/api/payment", payload);
-
             if (res.data?.url) {
+                // Redirect user to SSLCommerz Gateway
                 window.location.href = res.data.url;
             } else {
-                alert("Failed to create payment session.");
+                alert("Failed to initiate payment.");
             }
         } catch (error) {
             console.error("Payment error:", error);
@@ -71,6 +64,8 @@ const PaymentForConfirmF = ({ params }) => {
 
         setLoading(false);
     };
+
+    if (status === "loading") return <p>Loading...</p>;
 
     return (
         <div className="flex justify-center items-center min-h-screen p-4 bg-gradient-to-br from-blue-50 via-white to-gray-100">
@@ -88,12 +83,9 @@ const PaymentForConfirmF = ({ params }) => {
                             <label className="font-semibold">Full Name</label>
                             <input
                                 type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                placeholder="Enter your full name"
-                                required
-                                className="w-full border rounded-lg px-3 py-2"
+                                value={session?.user?.name || ""}
+                                readOnly
+                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
                             />
                         </div>
 
@@ -102,12 +94,9 @@ const PaymentForConfirmF = ({ params }) => {
                             <label className="font-semibold">Email</label>
                             <input
                                 type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                placeholder="Enter your email"
-                                required
-                                className="w-full border rounded-lg px-3 py-2"
+                                value={session?.user?.email || ""}
+                                readOnly
+                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
                             />
                         </div>
 
@@ -130,23 +119,9 @@ const PaymentForConfirmF = ({ params }) => {
                             <label className="font-semibold">Total Price (BDT)</label>
                             <input
                                 type="number"
-                                name="amount"
-                                value={doctor?.consultationFee}
+                                value={doctor?.consultationFee || ""}
                                 readOnly
-                                className="w-full border rounded-lg px-3 py-2"
-                            />
-                        </div>
-
-                        {/* Transaction ID */}
-                        <div className="space-y-2">
-                            <label className="font-semibold">Transaction ID</label>
-                            <input
-                                type="text"
-                                name="transactionId"
-                                value={formData?.transactionId}
-                                onChange={handleChange}
-                                placeholder="Leave empty, will be handled in backend"
-                                className="w-full border rounded-lg px-3 py-2"
+                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
                             />
                         </div>
 
@@ -162,7 +137,7 @@ const PaymentForConfirmF = ({ params }) => {
 
                 <CardFooter className="flex justify-center">
                     <Button asChild variant="outline" className="w-full rounded-xl">
-                        <Link href="/all-doctor">Cancel</Link>
+                        <Link href="/dashboard/patient/all-doctor">Cancel</Link>
                     </Button>
                 </CardFooter>
             </Card>
