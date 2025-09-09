@@ -17,7 +17,7 @@ export default function LoginPage() {
             width={460}
             height={500}
             alt={"Authentication Image"}
-          />
+          /> 
         </div> */}
 
         {/* Right Section */}
