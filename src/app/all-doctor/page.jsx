@@ -32,7 +32,7 @@ const AllDoctorPage = () => {
         router.push(`/all-doctor/${doctorId}`);
         console.log(doctorId);
     };
-
+ 
     useEffect(() => {
         fetch("/doctor.json")
             .then((res) => res.json())
