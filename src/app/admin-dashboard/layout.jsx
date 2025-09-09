@@ -2,8 +2,21 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, Home, Users, LayoutDashboard, UserCog, LogOut } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function DashboardLayout({ children }) {
+
+  const { data: session, status } = useSession();
+  if (status === "loading") {
+    return <div className="text-center mt-20">Loading...</div>;
+  }
+  if (!session) {
+    redirect('/login')
+  }
+  if (session?.user?.role !== "Admin") {
+    redirect('/')
+  }
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
@@ -29,7 +42,7 @@ export default function DashboardLayout({ children }) {
             </li>
           ))}
           <li>
-            <button className="flex items-center gap-3 text-red-600 dark:text-red-400">
+            <button className="flex items-center gap-3 text-red-600 dark:text-red-400" onClick={() => { signOut() }}>
               <LogOut size={18} /> LogOut
             </button>
           </li>

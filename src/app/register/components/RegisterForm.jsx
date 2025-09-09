@@ -48,13 +48,14 @@ export default function RegisterForm() {
         certificates: form.certificates?.value ? [form.certificates.value] : [],
         availability: {},
         appointments: [],
+        isVerified: false,
       };
     }
 
     try {
       const res = await registerUser(payload);
-
       if (res.success) {
+        console.log(res)
         toast.success("Registration successful ✅"); // ✅ Success toast
         form.reset();
         setRole("Patient"); // reset role
@@ -72,7 +73,7 @@ export default function RegisterForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full my-50 max-w-lg mx-auto space-y-6 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md"
+      className="w-full  max-w-xl not-first:mx-auto space-y-6 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md"
     >
        <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
         Register
