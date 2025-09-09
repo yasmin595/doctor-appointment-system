@@ -9,48 +9,85 @@ export default function Page() {
 
 
   // fetch users
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch("/api/adminAuth/manageUsers");
-        const data = await res.json();
-        setUsers(data);
-      } catch (err) {
-        console.error("Error fetching users:", err);
-      }
-    };
-    fetchUsers();
-  }, []);
+useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch("/api/adminAuth/manageUsers");
+      console.log("Response status:", res.status);
+      const data = await res.json();
+      console.log("Fetched data:", data);
+      setUsers(data);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
+  };
+  fetchUsers();
+}, []);
 
-  const handleDelete = (id) => {
-    toast("Are you sure you want to delete this user?", {
-      action: {
-        label: "Yes, Delete",
-        onClick: () => {
-          setUsers((prev) => prev.filter((user) => user._id !== id));
-          toast.success("User deleted successfully ✅");
-        },
-      },
-      cancel: {
-        label: "Cancel",
-        onClick: () => toast.info("Delete cancelled ❌"),
-      },
+
+  
+const handleDelete = async (id) => {
+  const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(`/api/adminAuth/manageUsers/${id}`, {
+      method: "DELETE",
     });
-  };
 
-  const handleStatusChange = (id, newStatus) => {
-    setUsers((prev) =>
-      prev.map((user) =>
-        user._id === id ? { ...user, status: newStatus } : user
-      )
-    );
-    toast.success(`Doctor status updated to "${newStatus}" successfully ✅`);
-  };
+    if (res.ok) {
+      // Remove deleted user from state
+      setUsers((prev) => prev.filter((user) => user._id !== id));
+      toast.success("User deleted successfully ✅");
+    } else {
+      // Try to parse JSON, fallback to default message
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        data = { message: "Failed to delete user ❌" };
+      }
+      toast.error(data.message);
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Something went wrong ❌");
+  }
+};
 
-  const filteredUsers =
-    activeTab === "doctors"
-      ? users.filter((u) => u.role === "doctor")
-      : users.filter((u) => u.role === "patient");
+
+
+
+const handleStatusChange = async (id, isVerified) => {
+  try {
+    const res = await fetch("/api/adminAuth/manageUsers/updateStatus", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: id, isVerified }),
+    });
+
+    if (res.ok) {
+      setUsers((prev) =>
+        prev.map((user) =>
+          user._id === id ? { ...user, isVerified } : user
+        )
+      );
+      toast.success(`Doctor ${isVerified ? "accepted" : "rejected"} successfully ✅`);
+    } else {
+      toast.error("Failed to update status ❌");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Something went wrong ❌");
+  }
+};
+
+
+
+const filteredUsers =
+  activeTab === "doctors"
+    ? users.filter((u) => u.role?.toLowerCase() === "doctor")
+    : users.filter((u) => u.role?.toLowerCase() === "patient");
 
   return (
 <div className="p-6 my-5 min-h-screen   dark:bg-black dark:text-white">      {/* Dark Mode Toggle Button */}
@@ -116,57 +153,53 @@ export default function Page() {
                     {user.role}
                   </td>
 
-                  {activeTab === "doctors" && (
-                    <td className="border border-gray-300 px-4 py-2">
-                      <span
-                        className={`px-2 py-1 rounded text-sm ${
-                          user.status === "verified"
-                            ? "bg-green-200 text-green-800"
-                            : user.status === "rejected"
-                            ? "bg-red-200 text-red-800"
-                            : "bg-yellow-200 text-yellow-800"
-                        }`}
-                      >
-                        {user.status}
-                      </span>
-                    </td>
-                  )}
+{activeTab === "doctors" && (
+  <td className="border border-gray-300 px-4 py-2">
+    <span
+      className={`px-2 py-1 rounded text-sm ${
+        user.isVerified
+          ? "bg-green-200 text-green-800"
+          : "bg-red-200 text-red-800"
+      }`}
+    >
+      {user.isVerified ? "Verified" : "Unverified"}
+    </span>
+  </td>
+)}
 
-                  <td className="border border-gray-300 px-4 py-2">
-                    {activeTab === "doctors" ? (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() =>
-                            handleStatusChange(user._id, "verified")
-                          }
-                          className="bg-green-600 px-3 py-1 rounded hover:bg-green-700"
-                        >
-                          Accept
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleStatusChange(user._id, "rejected")
-                          }
-                          className="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
-                        >
-                          Reject
-                        </button>
-                        <button
-                          onClick={() => handleDelete(user._id)}
-                          className="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
-                        >
-                          Block
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => handleDelete(user._id)}
-                        className="block w-full bg-red-600 px-4 py-2 rounded hover:bg-red-700"
-                      >
-                        Block
-                      </button>
-                    )}
-                  </td>
+<td className="border border-gray-300 px-4 py-2">
+  {activeTab === "doctors" ? (
+    <div className="flex gap-2">
+      <button
+        onClick={() => handleStatusChange(user._id, true)}
+        className="bg-green-600 px-3 py-1 rounded hover:bg-green-700"
+      >
+        Accept
+      </button>
+      <button
+        onClick={() => handleStatusChange(user._id, false)}
+        className="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
+      >
+        Reject
+      </button>
+      <button
+        onClick={() => handleDelete(user._id)}
+        className="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
+      >
+        Block
+      </button>
+    </div>
+  ) : (
+    <button
+      onClick={() => handleDelete(user._id)}
+      className="block w-full bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+    >
+      Block
+    </button>
+  )}
+</td>
+
+
                 </tr>
               ))
             ) : (
