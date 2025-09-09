@@ -12,6 +12,7 @@ export default function LoginPage() {
         {/* Left Section */}
         {/* <div className="col-span-12 md:col-span-6 flex justify-center items-center">
           <Image
+          
             className="hidden md:block"
             src={"/assets/images/login/login.svg"}
             width={460}
