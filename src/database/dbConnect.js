@@ -27,8 +27,8 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 
 //export const collectionsNameObj = { userCollection: "test_user" };
 
-let client;
-let db;
+      let client;
+      let db;
 
 export default async function dbConnect() {
   if (!client) {
