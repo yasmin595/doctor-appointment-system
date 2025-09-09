@@ -3,7 +3,7 @@
 export async function DELETE(req, { params }) {
   try {
     const { id } = params;
-    const collection = await dbConnect("users");
+    const collection = await dbConnect("test_user");
 
     const result = await collection.deleteOne({ _id: new ObjectId(id) });
 
