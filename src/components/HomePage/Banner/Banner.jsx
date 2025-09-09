@@ -2,13 +2,20 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button"; 
+import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
 const Banner = () => {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const handleBook = () => {
-    router.push("/all-doctor");
+    if (status === "loading") return; // still checking session
+    if (!session) {
+      router.push("/login"); // not logged in
+    } else {
+      router.push("/dashboard/patient/all-doctor"); // logged in
+    }
   };
 
   return (
