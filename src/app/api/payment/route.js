@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
 import dbConnect from "@/lib/dbConnect";
-// import dbConnect from "@/database/dbConnect";
 
 export async function POST(req) {
     try {
@@ -11,13 +10,13 @@ export async function POST(req) {
         const { name, email, phone, amount, doctorId, doctorName } = data;
         const tran_id = "TXN_" + Date.now();
 
-        // Save transaction (Pending)
+        // Save transaction in DB
         await db.collection("transactions").insertOne({
             tran_id,
-            name,
-            email,
-            phone,
-            amount,
+            patientName: name,
+            patientEmail: email,
+            patientPhone: phone,
+            fee: amount,
             doctorId,
             doctorName,
             status: "Pending",
@@ -30,9 +29,9 @@ export async function POST(req) {
             total_amount: amount,
             currency: "BDT",
             tran_id,
-            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/success`,
-            fail_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/fail`,
-            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/cancel`,
+            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/success?tran_id=${tran_id}`,
+            fail_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/fail?tran_id=${tran_id}`,
+            cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/cancel?tran_id=${tran_id}`,
             cus_name: name,
             cus_email: email,
             cus_add1: "Dhaka",
