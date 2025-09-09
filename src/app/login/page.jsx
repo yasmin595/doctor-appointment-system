@@ -56,20 +56,6 @@ export default function LoginPage() {
   };
   return (
     <>
-<<<<<<< HEAD
-      {/* <h1 className="text-3xl font-bold text-center my-20">Login</h1> */}
-      <section className="container mx-auto grid grid-cols-12">
-        {/* Left Section */}
-        {/* <div className="col-span-12 md:col-span-6 flex justify-center items-center">
-          <Image
-            className="hidden md:block"
-            src={"/assets/images/login/login.svg"}
-            width={460}
-            height={500}
-            alt={"Authentication Image"}
-          /> 
-        </div> */}
-=======
       <Navbar />
       <section className="mt-30 flex justify-center items-center">
         <form
@@ -79,7 +65,6 @@ export default function LoginPage() {
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white text-center">
             Login
           </h2>
->>>>>>> 1013142293dcbd9d7efbf3236ed4fc95a28b0324
 
           {/* Email */}
           <div className="flex flex-col">
