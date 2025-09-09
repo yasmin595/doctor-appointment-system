@@ -1,8 +1,19 @@
+'use server'
 import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
 
-export async function POST(req) {
-    const data = await req.formData();
-    console.log("❌ Payment Failed:", Object.fromEntries(data));
+export async function GET(req) {
+    const { searchParams } = new URL(req.url);
+    const tran_id = searchParams.get("tran_id");
 
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/payment-fail`);
+    if (!tran_id)
+        return NextResponse.json({ error: "Transaction ID missing" }, { status: 400 });
+
+    const db = await dbConnect();
+    await db.collection("appointments").updateOne(
+        { transaction_Id: tran_id },
+        { $set: { paymentStatus: "failed", updatedAt: new Date() } }
+    );
+
+    return NextResponse.redirect("/payment-failed");
 }
