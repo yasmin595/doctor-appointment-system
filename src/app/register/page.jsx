@@ -12,7 +12,7 @@ export default function RegisterPage() {
       </h1>
 
       {/* Main Section */}
-      <section className="container mx-auto grid grid-cols-12 gap-6 px-4 md:px-8">
+      <section className="container  mx-auto grid grid-cols-12 gap-6 px-4 md:px-8">
         {/* Left Section (Image) */}
         {/* <div className="col-span-12 md:col-span-6 flex justify-center items-center">
           <Image
