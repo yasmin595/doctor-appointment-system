@@ -16,9 +16,9 @@ export default function HomePage() {
         <Banner />
       </section>
       {/* DoctorSection */}
-      {/* <section className="pb-16">
+      <section className="pb-16">
            <DoctorSection />
-      </section> */}
+      </section>
 
       {/* How It Works Section */}
       <section className=" bg-green-50 dark:bg-gray-900">
