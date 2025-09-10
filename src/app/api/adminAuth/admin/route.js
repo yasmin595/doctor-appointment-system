@@ -26,7 +26,6 @@ export async function GET(req) {
 
     return new Response(JSON.stringify(admin), { status: 200 });
   } catch (err) {
-    console.error("Error fetching admin:", err);
     return new Response(JSON.stringify({ message: "Error fetching admin" }), { status: 500 });
   }
 }

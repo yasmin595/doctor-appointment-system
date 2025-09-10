@@ -13,12 +13,10 @@ useEffect(() => {
   const fetchUsers = async () => {
     try {
       const res = await fetch("/api/adminAuth/manageUsers");
-      console.log("Response status:", res.status);
       const data = await res.json();
-      console.log("Fetched data:", data);
       setUsers(data);
     } catch (err) {
-      console.error("Error fetching users:", err);
+       toast.error("Something went wrong ❌" );
     }
   };
   fetchUsers();
@@ -50,7 +48,6 @@ const handleDelete = async (id) => {
       toast.error(data.message);
     }
   } catch (err) {
-    console.error(err);
     toast.error("Something went wrong ❌");
   }
 };
@@ -77,7 +74,6 @@ const handleStatusChange = async (id, isVerified) => {
       toast.error("Failed to update status ❌");
     }
   } catch (err) {
-    console.error(err);
     toast.error("Something went wrong ❌");
   }
 };
@@ -172,19 +168,19 @@ const filteredUsers =
     <div className="flex gap-2">
       <button
         onClick={() => handleStatusChange(user._id, true)}
-        className="bg-green-600 px-3 py-1 rounded hover:bg-green-700"
+        className="bg-green-600 text-white font-bold  px-3 py-1 rounded hover:bg-green-700"
       >
         Accept
       </button>
       <button
         onClick={() => handleStatusChange(user._id, false)}
-        className="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
+        className="bg-red-600 text-white font-bold px-3 py-1 rounded hover:bg-red-700"
       >
         Reject
       </button>
       <button
         onClick={() => handleDelete(user._id)}
-        className="bg-red-600 px-3 py-1 rounded hover:bg-red-700"
+        className="bg-red-600 text-white font-bold  px-3 py-1 rounded hover:bg-red-700"
       >
         Block
       </button>
@@ -192,7 +188,7 @@ const filteredUsers =
   ) : (
     <button
       onClick={() => handleDelete(user._id)}
-      className="block w-full bg-red-600 px-4 py-2 rounded hover:bg-red-700"
+      className="block w-full bg-red-600 text-white font-bold  px-4 py-2 rounded hover:bg-red-700"
     >
       Block
     </button>

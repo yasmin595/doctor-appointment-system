@@ -69,7 +69,6 @@ export async function PUT(req) {
     return new Response(JSON.stringify(updatedUser), { status: 200 });
 
   } catch (err) {
-    console.error("Error updating profile:", err);
     return new Response(
       JSON.stringify({ message: "Error updating profile", error: err.message }),
       { status: 500 }

@@ -79,7 +79,6 @@ const handleSave = async () => {
     if (userData.currentPassword) updateData.currentPassword = userData.currentPassword;
   }
 
-  console.log("Sending update data:", updateData);
 
   try {
     const res = await fetch("/api/adminAuth/profileUpdate", {
@@ -89,7 +88,6 @@ const handleSave = async () => {
     });
 
     const data = await res.json();
-    console.log("Update response:", data);
 
     if (res.ok) {
       setUserData(data); // update frontend state
@@ -98,7 +96,6 @@ const handleSave = async () => {
       toast.error(data.message || "Failed to update profile");
     }
   } catch (err) {
-    console.error("Error updating profile:", err);
     toast.error("Something went wrong while updating profile");
   }
   setUpdating(false);
@@ -292,7 +289,7 @@ const handleSave = async () => {
 <button
   onClick={handleSave}
   disabled={updating}
-  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+  className="px-6 py-2 bg-blue-600 text-white font-bold  rounded-lg hover:bg-blue-700 disabled:opacity-50"
 >
   {updating ? "Updating..." : "Update Security"}
 </button>
@@ -368,7 +365,7 @@ const handleSave = async () => {
                 <div className="flex justify-end mt-8">
                   <button 
                     onClick={handleSave}
-                    className="px-6 py-2 bg-blue-600 dark:bg-gray-800 dark:text-gray-100 rounded-lg hover:bg-blue-700"
+                    className="px-6 py-2 bg-blue-600 dark:bg-gray-800 text-white font-bold  rounded-lg hover:bg-blue-700"
                   >
                     Save Preferences
                   </button>
