@@ -34,11 +34,10 @@ const handleDelete = async (id) => {
     });
 
     if (res.ok) {
-      // Remove deleted user from state
       setUsers((prev) => prev.filter((user) => user._id !== id));
       toast.success("User deleted successfully ✅");
     } else {
-      // Try to parse JSON, fallback to default message
+    
       let data;
       try {
         data = await res.json();

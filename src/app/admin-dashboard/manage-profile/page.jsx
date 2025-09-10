@@ -20,7 +20,7 @@ useEffect(() => {
       if (!res.ok) throw new Error("Failed to fetch admin data");
 
       const data = await res.json();
-      setUserData(data); // only logged-in admin
+      setUserData(data); 
     } catch (error) {
       toast.error("Failed to load admin data ❌");
     } finally {
