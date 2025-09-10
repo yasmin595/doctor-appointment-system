@@ -12,56 +12,50 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import PatientFeedback from "@/components/HomePage/PatientFeedback/PatientFeedback";
+import { useSession } from "next-auth/react";
 
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const { data: session } = useSession(); // ✅ get logged-in user session
+  const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState(null);
 
 
-  const dashboardData = {
-    stats: {
-      totalPatients: 1248,
-      newPatients: 42,
-      appointmentsToday: 28,
-      availableDoctors: 18,
-    },
-    recentAppointments: [
-      { id: 1, patient: "Sarah Johnson", doctor: "Dr. Patel", time: "10:30 AM", status: "Completed" },
-      { id: 2, patient: "Michael Chen", doctor: "Dr. Rodriguez", time: "11:45 AM", status: "In Progress" },
-      { id: 3, patient: "Emma Wilson", doctor: "Dr. Kim", time: "1:15 PM", status: "Scheduled" },
-      { id: 4, patient: "James Miller", doctor: "Dr. Thompson", time: "2:30 PM", status: "Scheduled" },
-    ],
-    notifications: [
-      { id: 1, message: "New patient registration requires approval", priority: "high" },
-      { id: 2, message: "Monthly staff meeting scheduled for Friday", priority: "medium" },
-      { id: 3, message: "Inventory restock needed for surgical masks", priority: "high" },
-    ],
-  };
-
+  const dashboardData = 
+  { stats: { totalPatients: 1248,
+     newPatients: 42, appointmentsToday: 28, 
+     availableDoctors: 18, },
+      recentAppointments: [ 
+        { id: 1, patient: "Sarah Johnson", 
+          doctor: "Dr. Patel", time: "10:30 AM", 
+          status: "Completed" }, { id: 2, patient: "Michael Chen", 
+            doctor: "Dr. Rodriguez", time: "11:45 AM", status: "In Progress" },
+             { id: 3, patient: "Emma Wilson", doctor: "Dr. Kim", time: "1:15 PM", status: "Scheduled" }, 
+             { id: 4, patient: "James Miller", doctor: "Dr. Thompson", time: "2:30 PM", status: "Scheduled" }, ],
+              notifications: [ { id: 1, message: "New patient registration requires approval", priority: "high" }, { id: 2, message: "Monthly staff meeting scheduled for Friday", priority: "medium" }, { id: 3, message: "Inventory restock needed for surgical masks", priority: "high" }, ], };
+  
   
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    if (!session?.user?.email) return;
+
+    const fetchAdminData = async () => {
       try {
-        const res = await fetch("/api/adminAuth/admin"); 
-        if (!res.ok) throw new Error("Failed to fetch dashboard data");
+        const res = await fetch(`/api/adminAuth/admin?email=${session?.user?.email}`);
+        if (!res.ok) throw new Error("Failed to fetch admin data");
 
         const data = await res.json();
-        console.log(data)
-        setData(data);
-
+        setAdmin(data);
       } catch (error) {
-        toast.error("Failed to load dashboard ❌");
-
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDashboardData();
-  }, []);
+    fetchAdminData();
+  }, [session]);
 
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="admin-dashboard min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors">
@@ -83,16 +77,7 @@ export default function AdminDashboard() {
 
       <div className="font-bold text-xl md:text-2xl text-center py-6">
         <ul>
-  {data?.map(user => (
-    <>
-   
-    <li key={user?._id}>
-        <span>Welcome, Admin </span> <span className="text-green-700 italic">{user?.name}</span>
-    </li>
-
-      
-       </>
-  ))}
+  <h1>Welcome, Admin <span className="text-green-700 italic">{admin?.name}</span></h1>
 </ul>
 
      
