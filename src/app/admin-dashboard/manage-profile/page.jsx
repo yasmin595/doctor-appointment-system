@@ -18,6 +18,7 @@ export default function ManageProfile() {
 
         const data = await res.json();
         setUserData(data); // use fetched admin data
+        console.log(data)
       } catch (error) {
         toast.error("Failed to load admin data ❌");
       } finally {
@@ -323,7 +324,7 @@ export default function ManageProfile() {
                       <input
                         type="checkbox"
                         name="email"
-                        checked={userData.notifications.email}
+                        checked={userData.email}
                         onChange={handleInputChange}
                         className="sr-only peer"
                       />
@@ -341,7 +342,7 @@ export default function ManageProfile() {
                       <input
                         type="checkbox"
                         name="push"
-                        checked={userData.notifications.push}
+                        checked={userData.push}
                         onChange={handleInputChange}
                         className="sr-only peer"
                       />
@@ -359,7 +360,7 @@ export default function ManageProfile() {
                       <input
                         type="checkbox"
                         name="sms"
-                        checked={userData.notifications.sms}
+                        checked={userData.sms}
                         onChange={handleInputChange}
                         className="sr-only peer"
                       />

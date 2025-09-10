@@ -97,6 +97,7 @@ export default function DoctorSection() {
           No doctors found
         </p>
       )}
-    </section>
+    </section> 
+    
   );
 }
