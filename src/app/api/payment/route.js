@@ -5,6 +5,11 @@ import dbConnect from "@/lib/dbConnect";
 export async function POST(req) {
     try {
         const data = await req.json();
+
+        if (!data.Fee) {
+            return NextResponse.json({ error: "Fee is required" }, { status: 400 });
+        }
+
         const db = await dbConnect();
 
         // Save initial appointment
@@ -15,16 +20,16 @@ export async function POST(req) {
             createdAt: new Date(),
         });
 
-        // Generate a transaction ID
+        // Generate transaction ID
         const tran_id = "TXN_" + Date.now();
 
-        // Update the appointment with transaction ID
+        // Update appointment with transaction ID
         await db.collection("appointments").updateOne(
             { _id: result.insertedId },
             { $set: { transaction_Id: tran_id } }
         );
 
-        // Prepare SSLCommerz payload
+        // SSLCommerz payload
         const payload = {
             store_id: process.env.SSL_STORE_ID,
             store_passwd: process.env.SSL_STORE_PASS,
@@ -59,7 +64,7 @@ export async function POST(req) {
 
         return NextResponse.json({ error: "Failed to initiate payment" }, { status: 400 });
     } catch (error) {
-        console.error("Payment Init Error:", error.response?.data || error.message);
+        console.error("Payment Init Error:", error.response ? error.response.data : error);
         return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 }

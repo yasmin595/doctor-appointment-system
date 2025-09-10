@@ -1,12 +1,9 @@
-// app/api/success/route.js
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 
 async function handleSuccess(req) {
     try {
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
-        // For POST, req.url may not have query, so extract from body first
         let tran_id;
 
         if (req.method === "POST") {
@@ -33,6 +30,7 @@ async function handleSuccess(req) {
             { $set: { isPaid: true, paymentStatus: "success", paymentDate: new Date() } }
         );
 
+        // Redirect user to frontend page
         return NextResponse.redirect(`${baseUrl}/payment-success`);
     } catch (error) {
         console.error("Payment Success Error:", error);
