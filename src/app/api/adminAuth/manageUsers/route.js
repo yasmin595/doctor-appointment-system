@@ -11,10 +11,8 @@ export async function GET() {
     // fetch all users, exclude password
     const users = await collection.find({}).project({ password: 0 }).toArray();
 
-    console.log("Fetched users:", users);
     return new Response(JSON.stringify(users), { status: 200 });
   } catch (err) {
-    console.error("Error fetching users:", err);
     return new Response("Error fetching users", { status: 500 });
   }
 }

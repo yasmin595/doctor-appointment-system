@@ -84,7 +84,6 @@ export default function DashboardLayout({ children }) {
             <li>
           <button
             onClick={() => {
-              console.log("Logout clicked");
               signOut({ callbackUrl: "/" });
             }}
             className="flex items-center gap-3 text-red-600 dark:text-red-400"
