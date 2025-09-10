@@ -12,6 +12,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { data: session, status } = useSession();
+  console.log(session)
 
   // Scroll effect
   useEffect(() => {
@@ -22,9 +23,16 @@ export default function Navbar() {
 
   const links = [
     { name: "Home", href: "/" },
-    { name: "All Doctors", href: "/all-doctor" },
     { name: "Services", href: "/services" },
-    { name: "Dashboard", href: "/admin-dashboard" },
+    ...(session?.user?.role
+      ? [{
+        name: "Dashboard",
+        href: session.user.role === "Doctor"
+          ? "/dashboard/doctor/doctor-appointments"
+          : ( session.user.role==="Patient" ? "dashboard/patient/all-doctor" 
+            : "/admin-dashboard"),
+      }]
+      : []),
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
@@ -33,11 +41,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-green-50 dark:bg-gray-900 shadow-md"
-          : "bg-transparent"
-      }`}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
+        ? "bg-green-50 dark:bg-gray-900 shadow-md"
+        : "bg-transparent"
+        }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
@@ -51,13 +58,12 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm lg:text-base transition font-medium ${
-                scrolled
-                  ? isActive(link.href)
-                    ? "text-green-700 dark:text-green-400 font-semibold"
-                    : "hover:text-green-700 dark:hover:text-green-400 text-black dark:text-white"
-                  : "text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
-              }`}
+              className={`text-sm lg:text-base transition font-medium ${scrolled
+                ? isActive(link.href)
+                  ? "text-green-700 dark:text-green-400 font-semibold"
+                  : "hover:text-green-700 dark:hover:text-green-400 text-black dark:text-white"
+                : "text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
+                }`}
             >
               {link.name}
             </Link>
@@ -66,25 +72,19 @@ export default function Navbar() {
 
         {/* Auth Buttons */}
         <div className="hidden md:flex items-center space-x-3">
-          {status === "loading" && <span>Loading...</span>}
 
           {status === "authenticated" ? (
             <>
-              {session?.user?.image && (
-                <Image
-                  src={session.user.image}
-                  width={40}
-                  height={40}
-                  alt="user-logo"
-                  className="rounded-full"
-                />
-              )}
+
               <button
                 onClick={() => signOut()}
                 className="lg:px-3 md:px-2 py-1 rounded-md border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition"
               >
                 Logout
               </button>
+               <div>
+                <ModeToggle />
+              </div>
             </>
           ) : (
             <>
@@ -118,11 +118,10 @@ export default function Navbar() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`block px-2 py-1 rounded ${
-                      isActive(link.href)
-                        ? "bg-green-100 dark:bg-green-700 font-semibold"
-                        : "hover:bg-green-100 dark:hover:bg-gray-700"
-                    }`}
+                    className={`block px-2 py-1 rounded ${isActive(link.href)
+                      ? "bg-green-100 dark:bg-green-700 font-semibold"
+                      : "hover:bg-green-100 dark:hover:bg-gray-700"
+                      }`}
                   >
                     {link.name}
                   </Link>
