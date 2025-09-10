@@ -59,6 +59,7 @@ const AppointmentList = ({ appointments, onUpdateStatus }) => {
                   <span className="text-gray-500 italic">No action needed</span>
                 )}
               </td>
+              
             </tr>
           ))}
         </tbody>
