@@ -18,24 +18,38 @@ export default function DoctorsCard({ doctor }) {
   };
 
   return (
-    <Card className="shadow-lg rounded-2xl overflow-hidden">
-      <Image
-        src={doctor.profilePicture || "https://i.pravatar.cc/150"}
-        alt={doctor.name}
-        width={400}
-        height={250}
-        className="object-cover w-full h-56"
-      />
-      <CardContent className="p-4">
-        <h2 className="text-xl font-semibold">{doctor.name}</h2>
-        <p className="text-gray-600">{doctor.specialization}</p>
-        <p className="text-sm text-gray-500">Experience: {doctor.experience}</p>
-        <p className="text-sm mt-1">
+    <Card className="shadow-md rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300 w-64 md:w-56 lg:w-60 bg-white dark:bg-gray-800">
+      {/* Full width doctor image */}
+      <div className="relative w-full h-36">
+        <Image
+          src={doctor.profilePicture || "https://i.pravatar.cc/150"}
+          alt={doctor.name}
+          fill
+          className="object-cover"
+        />
+      </div>
+
+      <CardContent className="p-3 text-center space-y-1">
+        <h2 className="text-md font-semibold truncate text-gray-900 dark:text-gray-100">
+          {doctor.name}
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300 truncate">
+          {doctor.specialization}
+        </p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          Experience: {doctor.experience}
+        </p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
           Certificates: {doctor.certificates?.join(", ")}
         </p>
+
+        {/* Button styled for light/dark mode */}
         <Button
           onClick={handleBookNow}
-          className="mt-4 w-full bg-blue-600 text-white hover:bg-blue-700"
+          className="mt-2 w-full py-1 rounded-md border transition text-sm
+          bg-white text-green-600 border-green-600
+          hover:bg-green-600 hover:text-white
+          dark:bg-gray-700 dark:text-white dark:border-gray-700 dark:hover:bg-green-600"
         >
           Book Now
         </Button>
