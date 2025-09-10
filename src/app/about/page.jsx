@@ -14,7 +14,7 @@ export default function Page() {
           transition={{ duration: 0.6 }}
           className="text-3xl md:text-4xl font-bold text-center text-gray-800 dark:text-gray-100"
         >
-          About Our DocNow
+          About Our DocNow 
         </motion.h2>
 
         {/* Subtitle */}
