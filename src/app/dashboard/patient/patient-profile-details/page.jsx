@@ -63,8 +63,10 @@ export default function PatientProfileDetails() {
             <p className="font-medium">{patient.phone}</p>
           </div>
           <div>
+
             <p className="text-gray-500 text-sm">Gender</p>
             <p className="font-medium">{patient.gender}</p>
+            
           </div>
           <div>
             <p className="text-gray-500 text-sm">Age</p>
