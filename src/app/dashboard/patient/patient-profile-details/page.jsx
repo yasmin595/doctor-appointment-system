@@ -1,22 +1,47 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 
 export default function PatientProfileDetails() {
-  // Demo patient data (later fetch from backend)
-  const patient = {
-    name: "Sheikh Fahad",
-    email: "fahad@example.com",
-    phone: "+880123456789",
-    gender: "Male",
-    age: 24,
-    bloodGroup: "B+",
-    address: "Dhanmondi, Dhaka, Bangladesh",
-    image: "https://i.pravatar.cc/150?img=3",
-  };
+  const [patient, setPatient] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPatient = async () => {
+      try {
+        const res = await fetch("/api/patient/profile", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch patient profile");
+        }
+
+        const data = await res.json();
+        setPatient(data);
+      } catch (error) {
+        console.error("Error fetching patient:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatient();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center mt-20">Loading...</div>;
+  }
+
+  if (!patient) {
+    return <div className="text-center mt-20">No patient profile found.</div>;
+  }
 
   return (
     <section className="max-w-3xl mx-auto p-6">

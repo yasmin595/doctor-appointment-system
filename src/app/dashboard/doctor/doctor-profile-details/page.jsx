@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -10,10 +10,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Pencil } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { doctorProfile } from "@/app/actions/user/doctorProfile";
+import { useSession } from "next-auth/react";
+import { updateDoctorProfile } from "@/app/actions/user/updateDoctorProfile";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 
 
 export default function DoctorProfileDetails() {
+  const { data: session } = useSession()
+  const [loading,setLoading]=useState(true)
+  const [user, setUser] = useState({})
   const [editing, setEditing] = useState(false);
   const [editingFees, setEditingFees] = useState(false);
   const [editingAvailability, setEditingAvailability] = useState(false);
@@ -26,6 +34,46 @@ export default function DoctorProfileDetails() {
     Saturday: { active: false, start: "09:00", end: "13:00" },
     Sunday: { active: false, start: "09:00", end: "13:00" },
   });
+
+  const fetchData = async () => {
+    try {
+      const res = await doctorProfile(session.user.email, session.user.role);
+      console.log(res);
+      if (res.availability && Object.keys(res.availability).length > 0) {
+        setAvailability(res.availability);
+      }
+      setUser(res);
+      setLoading(false)
+    } catch (err) {
+      console.error("Error fetching doctor profile:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData()
+  }, [editing, editingAvailability, editingFees])
+
+  const { register, handleSubmit, reset } = useForm();
+  const onSubmit = async (formData) => {
+    const updates = {
+      phone: formData.phone || user.phone,
+      Med_id: formData.Med_id || user.Med_id || "",
+      education: formData.education || user.education || "",
+      bio: formData.bio || user.bio,
+    };
+    console.log(updates)
+    const response = await updateDoctorProfile(user._id, updates);
+    if (response.success) {
+      toast.success("user updated!!");
+      setEditing(false);
+      reset()
+    }else{
+      toast.error("update failed!")
+    }
+
+  };
+  if(loading) return <p className="text-center">Loading.....</p>
+
   return (
     <div className="max-w-5xl mx-auto p-6 pt-20 min-h-screen">
       {/* Title */}
@@ -57,64 +105,50 @@ export default function DoctorProfileDetails() {
               </Button>
             </CardHeader>
             <CardContent>
+
               <div className="flex flex-col items-center text-center mb-6">
                 <div className="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
-                  SJ
+                  img
                 </div>
-                <h2 className="text-xl font-semibold mt-3">Dr. Sarah Johnson</h2>
-                <p className="text-blue-600">Cardiology</p>
-                <p className="text-sm text-gray-500">8 years of experience</p>
+                <h2 className="text-xl font-semibold mt-3">{user.name}</h2>
+                <p className="text-blue-600">{user.specialization}</p>
+                <p className="text-sm text-gray-500">{user.experience} years of experience</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
                   <label className="text-sm font-medium">Email Address</label>
-                  <Input
-                    type="email"
-                    defaultValue="sarah.johnson@medicenter.com"
-                    disabled={!editing}
-                  />
+                  <Input defaultValue={user.email} type="email" {...register("email")} disabled />
                 </div>
+
                 <div>
                   <label className="text-sm font-medium">Phone Number</label>
-                  <Input
-                    type="text"
-                    defaultValue="+1 (555) 123-4567"
-                    disabled={!editing}
-                  />
+                  <Input defaultValue={user.phone} type="text" {...register("phone")} disabled={!editing} />
                 </div>
+
                 <div>
                   <label className="text-sm font-medium">Medical License</label>
-                  <Input
-                    type="text"
-                    defaultValue="MD-12345-2020"
-                    disabled={!editing}
-                  />
+                  <Input defaultValue={user.Med_id || ""} type="text" {...register("Med_id")} placeholder="MD-12345-2020" disabled={!editing} />
                 </div>
+
                 <div>
                   <label className="text-sm font-medium">Education</label>
-                  <Input 
-                    type="text"
-                    defaultValue="Harvard Medical School"
-                    disabled={!editing}
-                  />
+                  <Input defaultValue={user.education || ""} type="text" {...register("education")} placeholder="Harvard Medical School" disabled={!editing} />
                 </div>
+
                 <div className="md:col-span-2">
                   <label className="text-sm font-medium">Professional Bio</label>
-                  <Textarea
-                    defaultValue="Experienced cardiologist specializing in preventive cardiology and heart disease management. Committed to providing comprehensive care to patients."
-                    disabled={!editing}
-                  />
+                  <Textarea {...register("bio")} defaultValue={user.bio} disabled={!editing} />
                 </div>
-              </div>
 
-              {editing && (
-                <div className="flex justify-end">
-                  <Button onClick={() => { setEditing(false) }} className="bg-blue-600 hover:bg-blue-700">
-                    Save Changes
-                  </Button>
-                </div>
-              )}
+                {editing && (
+                  <div className="md:col-span-2 flex justify-end">
+                    <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                      Save Changes
+                    </Button>
+                  </div>
+                )}
+              </form>
             </CardContent>
           </Card>
 
@@ -146,11 +180,21 @@ export default function DoctorProfileDetails() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Fee Amount</Label>
-                  <Input type="number" defaultValue="50" disabled={!editingFees} />
+                  <Input type="number" value={user.fee ? user.fee.amount : ""}
+                    onChange={(e) => setUser(prev => ({
+                      ...prev,
+                      fee: { ...prev.fee, amount: e.target.value }
+                    }))}
+                    placeholder="ex-50" disabled={!editingFees} />
                 </div>
                 <div className="space-y-2">
                   <Label>Currency</Label>
-                  <Select defaultValue="usd" disabled={!editingFees}>
+                  <Select defaultValue={user.fee ? user.fee.currency : ""}
+                    onValueChange={(value) => setUser(prev => ({
+                      ...prev,
+                      fee: { ...prev.fee, currency: value }
+                    }))}
+                    disabled={!editingFees}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
@@ -163,7 +207,12 @@ export default function DoctorProfileDetails() {
                 </div>
                 <div className="space-y-2">
                   <Label>Consultation Duration</Label>
-                  <Select defaultValue="30" disabled={!editingFees}>
+                  <Select defaultValue={user.fee ? user.fee.duration : ""}
+                    onValueChange={(value) => setUser(prev => ({
+                      ...prev,
+                      fee: { ...prev.fee, duration: value }
+                    }))}
+                    disabled={!editingFees}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select duration" />
                     </SelectTrigger>
@@ -179,7 +228,19 @@ export default function DoctorProfileDetails() {
 
               {editingFees && (
                 <div className="flex justify-end mt-4">
-                  <Button onClick={() => { setEditingFees(false) }} className="bg-blue-600 hover:bg-blue-700">
+                  <Button onClick={async () => {
+                    const updatedFee = {
+                      fee: {
+                        amount: user.fee?.amount,
+                        currency: user.fee?.currency,
+                        duration: user.fee?.duration,
+                      }
+                    };
+
+                    await updateDoctorProfile(user._id, updatedFee);
+
+                    setEditingFees(false)
+                  }} className="bg-blue-600 hover:bg-blue-700">
                     Save Fees
                   </Button>
                 </div>
@@ -261,7 +322,12 @@ export default function DoctorProfileDetails() {
 
               {editingAvailability && (
                 <div className="flex justify-end mt-6">
-                  <Button onClick={() => { setEditingAvailability(false) }} className="bg-blue-600 hover:bg-blue-700">
+                  <Button onClick={async () => {
+                    await updateDoctorProfile(user._id, {
+                      availability: availability
+                    });
+                    setEditingAvailability(false)
+                  }} className="bg-blue-600 hover:bg-blue-700">
                     Save Availability
                   </Button>
                 </div>

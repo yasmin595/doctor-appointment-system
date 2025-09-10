@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -13,8 +13,12 @@ import {
 } from "@/components/ui/table";
 import PatientFeedback from "@/components/HomePage/PatientFeedback/PatientFeedback";
 
+
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+
 
   const dashboardData = {
     stats: {
@@ -36,6 +40,29 @@ export default function AdminDashboard() {
     ],
   };
 
+  
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const res = await fetch("/api/adminAuth/admin"); 
+        if (!res.ok) throw new Error("Failed to fetch dashboard data");
+
+        const data = await res.json();
+        console.log(data)
+        setData(data);
+
+      } catch (error) {
+        toast.error("Failed to load dashboard ❌");
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+
   return (
     <div className="admin-dashboard min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors">
       <Head>
@@ -43,13 +70,32 @@ export default function AdminDashboard() {
         <meta name="description" content="Administrative dashboard for medical service management" />
       </Head>
 
+
       {/* Header */}
       <header className="px-6 py-4 shadow-md bg-white dark:bg-gray-900">
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold">Admin Dashboard   </h1>
+
+      
+        
+
+
       </header>
 
       <div className="font-bold text-xl md:text-2xl text-center py-6">
-        <span>Welcome, Admin</span>
+        <ul>
+  {data?.map(user => (
+    <>
+   
+    <li key={user?._id}>
+        <span>Welcome, Admin </span> <span className="text-green-700 italic">{user?.name}</span>
+    </li>
+
+      
+       </>
+  ))}
+</ul>
+
+     
       </div>
 
       <main className="px-6 pb-12">
@@ -116,9 +162,7 @@ export default function AdminDashboard() {
                 ))}
               </TableBody>
             </Table>
-            <Link href={"/doctor-appointments"}>
-              <Button className="mt-4 w-full">View All Appointments</Button>
-            </Link>
+       
           </div>
 
           {/* Notifications */}
@@ -137,7 +181,7 @@ export default function AdminDashboard() {
                 </li>
               ))}
             </ul>
-            <Button className="mt-4 w-full">View All Notifications</Button>
+            
           </div>
         </div>
 

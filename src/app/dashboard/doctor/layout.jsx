@@ -95,8 +95,9 @@ export default function PatientLayout({ children }) {
                 </SidebarFooter>
             </Sidebar>
             <main className="w-full">
-                <div className="w-11/12 mx-auto flex justify-end "><ModeToggle/></div>
                 <SidebarTrigger />
+                <div className="w-11/12 mx-auto flex justify-end "><ModeToggle/></div>
+                
                 {children}
             </main>
 
