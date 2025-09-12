@@ -18,23 +18,29 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { useSession } from "next-auth/react";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 const AllDoctorPage = () => {
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const [search, setSearch] = useState("");
     const [sortOption, setSortOption] = useState("");
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [open, setOpen] = useState(false);
     const router = useRouter();
-    const { user } = session
-    console.log(user);
 
+    const user = session?.user;
 
     const handleConfirm = (doctorId) => {
         router.push(`/dashboard/patient/all-doctor/${doctorId}`);
-        console.log(doctorId);
     };
 
     useEffect(() => {
@@ -58,14 +64,21 @@ const AllDoctorPage = () => {
             );
         }
 
-        if (sortOption === "fee-asc") {
-            result.sort((a, b) => a.consultationFee - b.consultationFee);
-        } else if (sortOption === "fee-desc") {
-            result.sort((a, b) => b.consultationFee - a.consultationFee);
-        } else if (sortOption === "rating-asc") {
-            result.sort((a, b) => a.rating - b.rating);
-        } else if (sortOption === "rating-desc") {
-            result.sort((a, b) => b.rating - a.rating);
+        switch (sortOption) {
+            case "fee-asc":
+                result.sort((a, b) => a.consultationFee - b.consultationFee);
+                break;
+            case "fee-desc":
+                result.sort((a, b) => b.consultationFee - a.consultationFee);
+                break;
+            case "rating-asc":
+                result.sort((a, b) => a.rating - b.rating);
+                break;
+            case "rating-desc":
+                result.sort((a, b) => b.rating - a.rating);
+                break;
+            default:
+                break;
         }
 
         setFilteredDoctors(result);
@@ -78,29 +91,34 @@ const AllDoctorPage = () => {
 
     return (
         <div className="max-w-6xl mx-auto p-6">
-            <h1 className="text-3xl font-bold text-center text-background mb-6">All Doctors</h1>
+            <h1 className="text-3xl font-bold text-center text-background mb-6">
+                All Doctors
+            </h1>
 
             {/* Search & Sort Controls */}
             <div className="flex flex-col md:flex-row gap-4 justify-between mb-8">
-                <input
-                    type="text"
+                <Input
                     placeholder="Search by name or specialization..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="border rounded-lg px-4 py-2 w-full md:w-1/2"
+                    className="w-full md:w-1/2"
                 />
 
-                <select
+                <Select
                     value={sortOption}
-                    onChange={(e) => setSortOption(e.target.value)}
-                    className="border rounded-lg px-4 py-2 w-full md:w-1/3"
+                    onValueChange={setSortOption}
+                    className="w-full md:w-1/3"
                 >
-                    <option value="">Sort by</option>
-                    <option value="fee-asc">Fee: Low to High</option>
-                    <option value="fee-desc">Fee: High to Low</option>
-                    <option value="rating-asc">Rating: Low to High</option>
-                    <option value="rating-desc">Rating: High to Low</option>
-                </select>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="fee-asc">Fee: Low to High</SelectItem>
+                        <SelectItem value="fee-desc">Fee: High to Low</SelectItem>
+                        <SelectItem value="rating-asc">Rating: Low to High</SelectItem>
+                        <SelectItem value="rating-desc">Rating: High to Low</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
             {/* Doctors Grid */}
@@ -152,22 +170,33 @@ const AllDoctorPage = () => {
                                     alt={selectedDoctor.name}
                                     className="w-24 h-24 rounded-full mx-auto mb-3"
                                 />
-                                <DialogTitle className="text-xl">
-                                    {selectedDoctor.name}
-                                </DialogTitle>
+                                <DialogTitle className="text-xl">{selectedDoctor.name}</DialogTitle>
                                 <DialogDescription>
-                                    {selectedDoctor.specialization} |{" "}
-                                    {selectedDoctor.location}
+                                    {selectedDoctor.specialization} | {selectedDoctor.location}
                                 </DialogDescription>
                             </DialogHeader>
 
                             <div className="mt-4 space-y-2 text-sm text-stone-400">
-                                <p><span className="font-semibold">Email:</span> {selectedDoctor.email}</p>
-                                <p><span className="font-semibold">Phone:</span> {selectedDoctor.phone}</p>
-                                <p><span className="font-semibold">Bio:</span> {selectedDoctor.bio}</p>
-                                <p><span className="font-semibold">Experience:</span> {selectedDoctor.experience}</p>
-                                <p><span className="font-semibold">Consultation Fee:</span> ৳{selectedDoctor.consultationFee}</p>
-                                <p><span className="font-semibold">Rating:</span> ⭐ {selectedDoctor.rating || 0}</p>
+                                <p>
+                                    <span className="font-semibold">Email:</span> {selectedDoctor.email}
+                                </p>
+                                <p>
+                                    <span className="font-semibold">Phone:</span> {selectedDoctor.phone}
+                                </p>
+                                <p>
+                                    <span className="font-semibold">Bio:</span> {selectedDoctor.bio}
+                                </p>
+                                <p>
+                                    <span className="font-semibold">Experience:</span>{" "}
+                                    {selectedDoctor.experience}
+                                </p>
+                                <p>
+                                    <span className="font-semibold">Consultation Fee:</span> ৳
+                                    {selectedDoctor.consultationFee}
+                                </p>
+                                <p>
+                                    <span className="font-semibold">Rating:</span> ⭐ {selectedDoctor.rating || 0}
+                                </p>
 
                                 {selectedDoctor.certificates?.length > 0 && (
                                     <div>
@@ -185,8 +214,7 @@ const AllDoctorPage = () => {
                                     <ul className="list-disc list-inside">
                                         {Object.entries(selectedDoctor.availability).map(([day, slots], i) => (
                                             <li key={i}>
-                                                <span className="font-semibold">{day}:</span>{" "}
-                                                {slots.join(", ")}
+                                                <span className="font-semibold">{day}:</span> {slots.join(", ")}
                                             </li>
                                         ))}
                                     </ul>
