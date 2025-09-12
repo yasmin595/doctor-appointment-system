@@ -142,7 +142,7 @@ const PaymentForConfirmF = ({ params }) => {
                             className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 transition-all"
                         >
                             {loading ? "Processing..." : `Pay ৳${doctor.consultationFee}`}
-                        </Button>
+                        </Button> 
                     </form>  
                 </CardContent>
 
