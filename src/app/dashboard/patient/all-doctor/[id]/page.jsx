@@ -143,7 +143,7 @@ const PaymentForConfirmF = ({ params }) => {
                         >
                             {loading ? "Processing..." : `Pay ৳${doctor.consultationFee}`}
                         </Button> 
-                    </form>  
+                    </form>   
                 </CardContent>
 
                 <CardFooter className="flex justify-center">
