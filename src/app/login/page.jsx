@@ -46,7 +46,7 @@ export default function LoginPage() {
         form.reset();
         toast.success("Logged In successfully");
         //router.push("/");
-      }else{
+      } else {
         toast.error(response.error || "FAILED to Log In");
       }
     } catch (error) {
@@ -139,3 +139,4 @@ export default function LoginPage() {
     </>
   );
 }
+ 
