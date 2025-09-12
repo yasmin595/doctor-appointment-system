@@ -6,8 +6,9 @@ export async function POST(req) {
     try {
         const data = await req.json();
 
-        if (!data.Fee) {
-            return NextResponse.json({ error: "Fee is required" }, { status: 400 });
+        // Basic validation
+        if (!data.Fee || !data.Patient?.Name || !data.Patient?.Email || !data.Doctor?.Name) {
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
         const db = await dbConnect();
@@ -21,7 +22,7 @@ export async function POST(req) {
         });
 
         // Generate transaction ID
-        const tran_id = "TXN_" + Date.now();
+        const tran_id = "TXN_" + result.insertedId;
 
         // Update appointment with transaction ID
         await db.collection("appointments").updateOne(
@@ -39,13 +40,13 @@ export async function POST(req) {
             success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/success?tran_id=${tran_id}`,
             fail_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/fail?tran_id=${tran_id}`,
             cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/cancel?tran_id=${tran_id}`,
-            cus_name: data.Patient?.Name || "Customer",
-            cus_email: data.Patient?.Email || "customer@example.com",
+            cus_name: data.Patient.Name,
+            cus_email: data.Patient.Email,
             cus_add1: "Dhaka",
             cus_city: "Dhaka",
             cus_country: "Bangladesh",
             cus_phone: data.Phone || "0123456789",
-            product_name: data.Doctor?.Name || "Doctor Appointment",
+            product_name: data.Doctor.Name,
             product_category: "Healthcare",
             product_profile: "general",
         };
@@ -64,7 +65,7 @@ export async function POST(req) {
 
         return NextResponse.json({ error: "Failed to initiate payment" }, { status: 400 });
     } catch (error) {
-        console.error("Payment Init Error:", error.response ? error.response.data : error);
+        console.error("Payment Init Error:", error?.response?.data || error?.message || error);
         return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 }
