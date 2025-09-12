@@ -19,9 +19,9 @@ const PaymentForConfirmF = ({ params }) => {
 
     useEffect(() => {
         fetch("/doctor.json")
-            .then((res) => res.json())
-            .then((data) => {
-                const singleDoctor = data.find((d) => d.id == id);
+            .then(res => res.json())
+            .then(data => {
+                const singleDoctor = data.find(d => d.id == id);
                 setDoctor(singleDoctor);
             });
     }, [id]);
@@ -40,38 +40,19 @@ const PaymentForConfirmF = ({ params }) => {
             return;
         }
 
-        // Build payload for backend
         const payload = {
-            Fee: doctor.consultationFee,
-            Status: "pending",
-            Doctor: {
-                Id: doctor.id,
-                Name: doctor.name,
-                Photo: doctor.photo || "",
-                Email: doctor.email,
-            },
-            Patient: {
-                Id: session.user.id || "",
-                Name: session.user.name,
-                Photo: session.user.image || "",
-                Email: session.user.email,
-            },
-            Date: new Date().toISOString().split("T")[0],
-            Prescription_url: "",
-            Phone: formData.phone,
+            name: session.user.name,
+            email: session.user.email,
+            phone: formData.phone,
+            amount: doctor.consultationFee,
+            doctorId: doctor.id,
+            doctorName: doctor.name,
         };
 
         try {
-            // Use absolute URL in production
-            const API_URL =
-                process.env.NEXT_PUBLIC_BASE_URL
-                    ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment`
-                    : "/api/payment";
-
-            const res = await axios.post(API_URL, payload);
-
+            const res = await axios.post("/api/payment", payload);
             if (res.data?.url) {
-                // Redirect to SSLCommerz Gateway
+                // Redirect user to SSLCommerz Gateway
                 window.location.href = res.data.url;
             } else {
                 alert("Failed to initiate payment.");
@@ -97,62 +78,60 @@ const PaymentForConfirmF = ({ params }) => {
 
                 <CardContent>
                     <form onSubmit={handlePayment} className="space-y-4">
-                        <fieldset disabled={loading} className="space-y-4">
-                            {/* Name */}
-                            <div className="space-y-2">
-                                <label className="font-semibold">Full Name</label>
-                                <input
-                                    type="text"
-                                    value={session?.user?.name || ""}
-                                    readOnly
-                                    className="w-full border rounded-lg px-3 py-2 bg-gray-100"
-                                />
-                            </div>
+                        {/* Name */}
+                        <div className="space-y-2">
+                            <label className="font-semibold">Full Name</label>
+                            <input
+                                type="text"
+                                value={session?.user?.name || ""}
+                                readOnly
+                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
+                            />
+                        </div>
 
-                            {/* Email */}
-                            <div className="space-y-2">
-                                <label className="font-semibold">Email</label>
-                                <input
-                                    type="email"
-                                    value={session?.user?.email || ""}
-                                    readOnly
-                                    className="w-full border rounded-lg px-3 py-2 bg-gray-100"
-                                />
-                            </div>
+                        {/* Email */}
+                        <div className="space-y-2">
+                            <label className="font-semibold">Email</label>
+                            <input
+                                type="email"
+                                value={session?.user?.email || ""}
+                                readOnly
+                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
+                            />
+                        </div>
 
-                            {/* Phone */}
-                            <div className="space-y-2">
-                                <label className="font-semibold">Phone</label>
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                    placeholder="Enter your phone number"
-                                    required
-                                    className="w-full border rounded-lg px-3 py-2"
-                                />
-                            </div>
+                        {/* Phone */}
+                        <div className="space-y-2">
+                            <label className="font-semibold">Phone</label>
+                            <input
+                                type="tel"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                placeholder="Enter your phone number"
+                                required
+                                className="w-full border rounded-lg px-3 py-2"
+                            />
+                        </div>
 
-                            {/* Total Price */}
-                            <div className="space-y-2">
-                                <label className="font-semibold">Total Price (BDT)</label>
-                                <input
-                                    type="number"
-                                    value={doctor?.consultationFee || ""}
-                                    readOnly
-                                    className="w-full border rounded-lg px-3 py-2 bg-gray-100"
-                                />
-                            </div>
+                        {/* Total Price */}
+                        <div className="space-y-2">
+                            <label className="font-semibold">Total Price (BDT)</label>
+                            <input
+                                type="number"
+                                value={doctor?.consultationFee || ""}
+                                readOnly
+                                className="w-full border rounded-lg px-3 py-2 bg-gray-100"
+                            />
+                        </div>
 
-                            <Button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 transition-all"
-                            >
-                                {loading ? "Processing..." : `Pay ৳${doctor?.consultationFee}`}
-                            </Button>
-                        </fieldset>
+                        <Button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 transition-all"
+                        >
+                            {loading ? "Processing..." : `Pay ৳${doctor?.consultationFee}`}
+                        </Button>
                     </form>
                 </CardContent>
 
