@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 
 import NextAuthProvider from "@/providers/NextAuthProvider";
+import Navbar from "@/components/Shared/NavBar/NavBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +37,7 @@ export default function RootLayout({ children }) {
             disableTransitionOnChange
           >
             {/* Navbar */}
-            {/* <NavBar /> */}
+            <Navbar />
 
             {/* Main Content */}
             <main className="flex-grow">{children}</main>
@@ -44,7 +45,7 @@ export default function RootLayout({ children }) {
             {/* Toast */}
             <Toaster richColors />
             {/* Footer */}
-            {/* <Footer /> */}
+            <Footer />
           </ThemeProvider>
         </NextAuthProvider>
       </body>

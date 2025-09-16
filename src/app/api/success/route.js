@@ -3,7 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 
 async function handleSuccess(req) {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://appointment-management-system-black.vercel.app";
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://appointment-management-system-black.vercel.app/";
         let tran_id;
 
         if (req.method === "POST") {
