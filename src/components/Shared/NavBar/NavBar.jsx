@@ -12,9 +12,12 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { data: session, status } = useSession();
-  console.log(session)
 
-  // Scroll effect
+  // 👉 এখানে কন্ডিশন
+  if (pathname?.startsWith("/dashboard")) {
+    return null; // Dashboard পেজ হলে Navbar রেন্ডার করবে না
+  }
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
@@ -25,13 +28,17 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
     ...(session?.user?.role
-      ? [{
-        name: "Dashboard",
-        href: session.user.role === "Doctor"
-          ? "/dashboard/doctor/doctor-appointments"
-          : ( session.user.role==="Patient" ? "dashboard/patient/all-doctor" 
-            : "/admin-dashboard"),
-      }]
+      ? [
+        {
+          name: "Dashboard",
+          href:
+            session.user.role === "Doctor"
+              ? "/dashboard/doctor/doctor-appointments"
+              : session.user.role === "Patient"
+                ? "/dashboard/patient/all-doctor"
+                : "/admin-dashboard",
+        },
+      ]
       : []),
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
@@ -72,17 +79,15 @@ export default function Navbar() {
 
         {/* Auth Buttons */}
         <div className="hidden md:flex items-center space-x-3">
-
           {status === "authenticated" ? (
             <>
-
               <button
                 onClick={() => signOut()}
                 className="lg:px-3 md:px-2 py-1 rounded-md border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition"
               >
                 Logout
               </button>
-               <div>
+              <div>
                 <ModeToggle />
               </div>
             </>
