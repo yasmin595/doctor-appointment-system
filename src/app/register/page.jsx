@@ -2,8 +2,8 @@
 import React from "react";
 
 import RegisterForm from "./components/RegisterForm";
-import Navbar from "@/components/Shared/NavBar/NavBar";
-import Footer from "@/components/Shared/Footer/Footer";
+// import Navbar from "@/components/Shared/NavBar/NavBar";
+// import Footer from "@/components/Shared/Footer/Footer";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
@@ -18,11 +18,11 @@ export default function RegisterPage() {
   }
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <section className=" mt-30 flex justify-center items-center">
         <RegisterForm />
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

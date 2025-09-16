@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import Navbar from "@/components/Shared/NavBar/NavBar";
-import Footer from "@/components/Shared/Footer/Footer";
+// import Navbar from "@/components/Shared/NavBar/NavBar";
+// import Footer from "@/components/Shared/Footer/Footer";
 import { useSession } from "next-auth/react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -56,7 +56,7 @@ export default function LoginPage() {
   };
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <section className="mt-30 flex justify-center items-center">
         <form
           onSubmit={handleSubmit}
@@ -135,7 +135,7 @@ export default function LoginPage() {
           </p>
         </form>
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
