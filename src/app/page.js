@@ -1,7 +1,7 @@
 "use client"
 import HomePage from "@/components/HomePage/HomePage";
-import Footer from "@/components/Shared/Footer/Footer";
-import Navbar from "@/components/Shared/NavBar/NavBar";
+// import Footer from "@/components/Shared/Footer/Footer";
+// import Navbar from "@/components/Shared/NavBar/NavBar";
 import { Button } from "@/components/ui/button"
 import { useSession } from "next-auth/react";
 
@@ -16,9 +16,9 @@ export default function Home() {
       {/* grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 */}
       {/* <Button variant="outline">Button</Button>
       <ModeToggle /> */}
-      <Navbar />
+      {/* <Navbar /> */}
       <HomePage></HomePage>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

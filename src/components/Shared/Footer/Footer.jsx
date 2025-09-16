@@ -2,12 +2,19 @@
 
 import Link from "next/link";
 import Logo from "../Logo/Logo";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // 👉 Dashboard বা তার সাবরুট হলে Footer দেখাবে না
+  if (pathname?.startsWith("/dashboard")) {
+    return null;
+  }
+
   return (
     <footer className="bg-green-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 mt-16">
       <div className="container mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-8 py-10">
-        
         {/* Logo & About */}
         <div>
           <Logo />

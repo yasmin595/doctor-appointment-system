@@ -33,7 +33,7 @@ export default function DoctorSection() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/all-doctor");
+        const res = await fetch("https://appointment-management-system-black.vercel.app//api/all-doctor");
         const data = await res.json();
         setDoctors(data);
       } catch (err) {
@@ -97,7 +97,7 @@ export default function DoctorSection() {
           No doctors found
         </p>
       )}
-    </section> 
-    
+    </section>
+
   );
 }
