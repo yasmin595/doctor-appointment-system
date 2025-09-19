@@ -14,7 +14,7 @@ export async function POST(req) {
                 model: "gpt-4o-mini",
                 messages: [
                     {
-                        role: "system", 
+                        role: "system",
                         content: `Act as a helpful health assistant. Analyze the following symptoms and provide a JSON response with the following structure:
                                              condition : string
                                              severity : low | medium | high
@@ -30,10 +30,11 @@ export async function POST(req) {
     The recommended_specialist_department should be a always a list of all the possible doctor specialty departments to visit that could help the user.
     The recommendations should be actionable advice. 
     Do not provide any other text besides the JSON object.
-    
+    if you are unsure, provide your best guess based on the symptoms provided.
+    if user tells anything but symptoms and sickness then donot respond about that, respond with JSON with as your best guess to the condition as it is not related to health or sickness.
+
     Symptoms: ${symptoms}`
                     },
-                    { role: "user", content: `I have these symptoms: ${symptoms}. Give short and concise analysis about the sickness and give which specialized doctor should I visit.` }
                 ],
                 temperature: 0.7
             })

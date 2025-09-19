@@ -1,9 +1,21 @@
-
+"use client"
 import React from "react";
 
 import RegisterForm from "./components/RegisterForm";
+import Navbar from "@/components/Shared/NavBar/NavBar";
+import Footer from "@/components/Shared/Footer/Footer";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function RegisterPage() {
+  const { data: session, status } = useSession();
+  console.log(session)
+  if (status === "loading") {
+    return <div className="text-center mt-20">Loading...</div>;
+  }
+  if (session) {
+    redirect("/");
+  }
   return (
     <>
       {/* Page Title */}
@@ -12,7 +24,7 @@ export default function RegisterPage() {
       </h1>
 
       {/* Main Section */}
-      <section className="container  mx-auto grid grid-cols-12  gap-6 px-4 md:px-8">
+      <section className="container mx-auto grid grid-cols-12 gap-6 px-4 md:px-8">
         {/* Left Section (Image) */}
         {/* <div className="col-span-12 md:col-span-6 flex justify-center items-center">
           <Image
@@ -29,6 +41,7 @@ export default function RegisterPage() {
           <RegisterForm />
         </div>
       </section>
+      <Footer />
     </>
   );
 }

@@ -17,6 +17,21 @@ export const doctors = [
       Wednesday: ["10:00 AM - 12:00 PM", "4:00 PM - 6:00 PM"],
       Friday: ["10:00 AM - 12:00 PM", "4:00 PM - 6:00 PM"],
     },
-    appointments: []
+    appointments: [
+       {
+      id: 101,
+      patientName: "Munna Rahman",
+      date: "2025-09-10",
+      time: "10:00 AM",
+      status: "confirmed",
+    },
+    {
+      id: 102,
+      patientName: "Nusrat Jahan",
+      date: "2025-09-11",
+      time: "4:00 PM",
+      status: "pending",
+    },
+    ]
   }
 ];

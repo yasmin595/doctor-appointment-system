@@ -16,4 +16,4 @@ export async function DELETE(req, { params }) {
     console.error("Error deleting user:", error);
     return Response.json({ error: "Failed to delete user" }, { status: 500 });
   }
-}
+} 

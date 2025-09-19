@@ -270,7 +270,7 @@ export default function DoctorAppointments() {
 
             {/* Card View */}
             {view === "card" && (
-                <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid sm:grid-cols-2 md:grid-cols-3  gap-4">
                     {filteredAppointments.map((appt) => (
                         <Card key={appt.id} className="shadow-md">
                             <CardContent className="p-4 space-y-2">
@@ -298,7 +298,7 @@ export default function DoctorAppointments() {
                                         "No prescription"
                                     )}
                                 </p>
-                                <div className="flex gap-2 mt-2">
+                                <div className="flex flex-wrap gap-2 mt-2">
                                     {/* Change Status Modal */}
                                     <Dialog >
                                         <DialogTrigger asChild>

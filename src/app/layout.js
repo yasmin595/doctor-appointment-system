@@ -28,12 +28,10 @@ const geistMono = Geist_Mono({
 // };
 
 export default function RootLayout({ children }) {
-  //  const hideNavbar = useHideNavbar();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <NextAuthProvider>
           <ThemeProvider
@@ -42,13 +40,20 @@ export default function RootLayout({ children }) {
             enableSystem
             disableTransitionOnChange
           >
-            <NavBar></NavBar>
-            <main className=" flex-1"> {children}</main>
+            {/* Navbar */}
+            {/* <NavBar /> */}
+
+            {/* Main Content */}
+            <main className="flex-grow">{children}</main>
+
+            {/* Toast */}
             <Toaster richColors />
-            <Footer></Footer>
+            {/* Footer */}
+            {/* <Footer /> */}
           </ThemeProvider>
         </NextAuthProvider>
       </body>
     </html>
   );
 }
+

@@ -17,19 +17,24 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog";
+import { useSession } from "next-auth/react";
 
 const AllDoctorPage = () => {
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
+    const { data: session, status } = useSession();
     const [search, setSearch] = useState("");
     const [sortOption, setSortOption] = useState("");
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [open, setOpen] = useState(false);
     const router = useRouter();
-    console.log(doctors);
+    const { user } = session
+    console.log(user);
+
 
     const handleConfirm = (doctorId) => {
-        router.push(`/all-doctor/${doctorId}`);
+        router.push(`/dashboard/patient/all-doctor/${doctorId}`);
+        console.log(doctorId);
     };
 
     useEffect(() => {
@@ -204,7 +209,7 @@ const AllDoctorPage = () => {
                             <DialogFooter>
                                 <Button
                                     className="w-full"
-                                    onClick={handleConfirm}
+                                    onClick={() => handleConfirm(selectedDoctor.id)}
                                 >
                                     Confirm Booking
                                 </Button>
