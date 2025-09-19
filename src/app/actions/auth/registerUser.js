@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 
 export const registerUser = async (payload) => {
   try {
-    const { email, password, role } = payload;
+    const { email, password,image, role } = payload;
 
     if (!email || !password) {
       return { success: false, message: "Email and password are required" };

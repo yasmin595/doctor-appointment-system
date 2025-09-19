@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,67 +21,110 @@ import { FaCheckCircle, FaTimesCircle, FaClock, FaCalendarAlt } from "react-icon
 import { Table2Icon } from "lucide-react";
 import { NotebookIcon } from "lucide-react";
 import { toast } from "sonner";
-
-// Mock Data
-const aappointments = [
-    { id: "#0001", name: "Sarah Johnson", initials: "SJ", time: "09:00 AM", date: "2024-01-15", condition: "Regular Checkup", status: "Scheduled", prescription: null },
-    { id: "#0002", name: "Michael Chen", initials: "MC", time: "10:30 AM", date: "2024-01-15", condition: "Follow-up Consultation", status: "In Progress", prescription: null },
-    { id: "#0003", name: "Emily Davis", initials: "ED", time: "11:15 AM", date: "2024-01-15", condition: "Skin Allergy", status: "Completed", prescription: "prescription_001.pdf" },
-    { id: "#0004", name: "Robert Wilson", initials: "RW", time: "02:00 PM", date: "2024-01-15", condition: "Diabetes Management", status: "Scheduled", prescription: null },
-    { id: "#0005", name: "Lisa Anderson", initials: "LA", time: "03:30 PM", date: "2024-01-15", condition: "Hypertension Check", status: "Cancelled", prescription: null },
-    { id: "#0006", name: "David Brown", initials: "DB", time: "04:15 PM", date: "2024-01-15", condition: "Annual Physical", status: "Scheduled", prescription: null },
-];
+import { useSession } from "next-auth/react";
+import { getAppointments } from "@/app/actions/appointments/getAppointments";
+import { uploadPrescription } from "@/app/actions/appointments/uploadPrescription";
+import { updateAppointmentStatus } from "@/app/actions/appointments/updateStatus";
+import axios from "axios";
 
 const statusColors = {
-    Scheduled: "text-blue-500",
-    "In Progress": "text-yellow-500",
-    Completed: "text-green-500",
-    Cancelled: "text-red-500",
+    pending: "text-blue-500",
+    completed: "text-green-500",
+    cancelled: "text-red-500",
 };
 
 const statusIcons = {
-    Scheduled: <FaCalendarAlt />,
-    "In Progress": <FaClock />,
-    Completed: <FaCheckCircle />,
-    Cancelled: <FaTimesCircle />,
+    pending: <FaCalendarAlt />,
+    completed: <FaCheckCircle />,
+    cancelled: <FaTimesCircle />,
 };
 export default function DoctorAppointments() {
-    const [appointments, setAppointments] = useState(aappointments);
+    const { data: session } = useSession()
+    const [appointments, setAppointments] = useState([]);
+    const [fileToUpload, setFileToUpload] = useState(null);
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("All");
     const [view, setView] = useState("table");
     const [selectedAppt, setSelectedAppt] = useState(null);
     const [newStatus, setNewStatus] = useState("");
+    const fetchAppointments = async () => {
+        try {
+            const res = await getAppointments(session.user.email)
+            console.log(res)
+            setAppointments(res)
+        } catch (err) {
+            toast.error("Something Wents Wrong!")
+        }
+    }
+
+
+    useEffect(() => {
+        fetchAppointments()
+    }, [])
+
 
 
     const filteredAppointments = appointments.filter((appt) => {
-        const matchesSearch = appt.name.toLowerCase().includes(search.toLowerCase());
-        const matchesFilter = filter === "All" || appt.status === filter;
+        const matchesSearch = appt.Patient.Name.toLowerCase().includes(search.toLowerCase());
+        const matchesFilter = filter === "All" || appt.Status === filter;
         return matchesSearch && matchesFilter;
     });
-    const updateStatus = () => {
-        if (!selectedAppt) return;
-        setAppointments((prev) =>
-            prev.map((appt) =>
-                appt.id === selectedAppt.id ? { ...appt, status: newStatus } : appt
-            )
-        );
-        toast.success("Appointment status updated successfully!");
 
+    const updateStatus = async () => {
+        if (!selectedAppt) return;
+        console.log(typeof (selectedAppt._id), newStatus)
+        const res = await updateAppointmentStatus(selectedAppt._id, newStatus);
+        if (res.success) {
+            toast.success("Appointment status updated successfully!");
+        } else {
+            console.log(res)
+            toast.error("Failed to update status");
+        }
         setSelectedAppt(null);
     };
 
-    const uploadPrescription = (file) => {
+/*     const uploadPrescriptionFile = async (file) => {
         if (!selectedAppt) return;
-        setAppointments((prev) =>
-            prev.map((appt) =>
-                appt.id === selectedAppt.id ? { ...appt, prescription: file.name } : appt
-            )
-        );
-        toast.success("Prescription uploaded successfully!");
-        setSelectedAppt(null);
-    };
+        if (!file) return;
+        if (file.type !== "application/pdf") {
+            toast.error("Please upload a valid PDF file");
+            return;
+        }
+        console.log(file)
 
+
+        const CLOUDINARY_UPLOAD_URL = process.env.CLOUDINARY_URL;
+        const UPLOAD_PRESET = process.env.UPLOAD_PRESET;
+
+        if (file.type !== "application/pdf") {
+            toast.error("Please upload a valid PDF file");
+            return;
+        }
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
+        formData.append("resource_type", "raw"); 
+        console.log(formData)
+
+        const cloudinaryRes = await axios.post(CLOUDINARY_UPLOAD_URL, formData);
+        console.log(cloudinaryRes)
+        const PresUrl = cloudinaryRes.data.secure_url
+
+
+
+        const res = await uploadPrescription(selectedAppt._id, PresUrl);
+        if (res.success) {
+            setAppointments((prev) =>
+                prev.map((appt) =>
+                    appt._id === selectedAppt._id ? { ...appt, Prescription_url: fakeUrl } : appt
+                )
+            );
+            toast.success("Prescription uploaded successfully!");
+        } else {
+            toast.error("Failed to upload prescription");
+        }
+        setSelectedAppt(null);
+    }; */
     return (
         <div className="p-6 min-h-screen pt-20 max-w-7xl mx-auto">
             <h1 className="text-2xl font-bold">Appointment Management</h1>
@@ -101,11 +144,9 @@ export default function DoctorAppointments() {
                         <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="All">All</SelectItem>
-                        <SelectItem value="Scheduled">Scheduled</SelectItem>
-                        <SelectItem value="In Progress">In Progress</SelectItem>
-                        <SelectItem value="Completed">Completed</SelectItem>
-                        <SelectItem value="Cancelled">Cancelled</SelectItem>
+                        <SelectItem value="pending">Scheduled</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
                     </SelectContent>
                 </Select>
 
@@ -121,7 +162,7 @@ export default function DoctorAppointments() {
             {view === "table" && (
                 <div className="overflow-x-auto rounded-lg border shadow-sm">
                     <table className="w-full text-sm">
-                        <thead className="bg-gray-50">
+                        <thead className="">
                             <tr>
                                 <th className="p-3 text-left">Patient</th>
                                 <th className="p-3 text-left">Time</th>
@@ -132,26 +173,26 @@ export default function DoctorAppointments() {
                         </thead>
                         <tbody>
                             {filteredAppointments.map((appt) => (
-                                <tr key={appt.id} className="border-t">
+                                <tr key={appt._id} className="border-t">
                                     <td className="p-3 flex items-center gap-2">
                                         <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-bold">
                                             {appt.initials}
                                         </div>
                                         <div>
-                                            <div className="font-semibold">{appt.name}</div>
-                                            <div className="text-xs text-gray-500">{appt.id}</div>
+                                            <div className="font-semibold">{appt.Patient.Name}</div>
+                                            <div className="text-xs text-gray-500">{appt.Patient.Id}</div>
                                         </div>
                                     </td>
-                                    <td className="p-3">{appt.time}</td>
-                                    <td className="p-3">{appt.condition}</td>
+                                    <td className="p-3">{appt.Date}</td>
+                                    <td className="p-3">{appt.symptoms}</td>
                                     <td className={`p-3 flex items-center gap-2 ${statusColors[appt.status]}`}>
-                                        {statusIcons[appt.status]}
-                                        {appt.status}
+                                        {statusIcons[appt.Status]}
+                                        {appt.Status}
                                     </td>
                                     <td className="p-3">
-                                        {appt.prescription ? (
-                                            <a href={`/${appt.prescription}`} className="text-green-600 underline">
-                                                {appt.prescription}
+                                        {appt.Prescription_url ? (
+                                            <a href={`/${appt.Prescription_url}`} className="text-green-600 underline">
+                                                {appt.Prescription_url}
                                             </a>
                                         ) : (
                                             "No prescription"
@@ -166,7 +207,7 @@ export default function DoctorAppointments() {
                                                     variant="outline"
                                                     onClick={() => {
                                                         setSelectedAppt(appt);
-                                                        setNewStatus(appt.status);
+                                                        setNewStatus(appt.Status);
                                                     }}
                                                 >
                                                     Change Status
@@ -174,17 +215,16 @@ export default function DoctorAppointments() {
                                             </DialogTrigger>
                                             <DialogContent>
                                                 <DialogHeader>
-                                                    <DialogTitle>Change Status for {appt.name}</DialogTitle>
+                                                    <DialogTitle>Change Status for {appt.Patient.Name}</DialogTitle>
                                                 </DialogHeader>
-                                                <Select value={newStatus} onValueChange={setNewStatus}>
+                                                <Select value={newStatus} onValueChange={(value) => setNewStatus(value)}>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select new status" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="Scheduled">Scheduled</SelectItem>
-                                                        <SelectItem value="In Progress">In Progress</SelectItem>
-                                                        <SelectItem value="Completed">Completed</SelectItem>
-                                                        <SelectItem value="Cancelled">Cancelled</SelectItem>
+                                                        <SelectItem value="pending">Scheduled</SelectItem>
+                                                        <SelectItem value="completed">Completed</SelectItem>
+                                                        <SelectItem value="cancelled">Cancelled</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                                 <DialogFooter>
@@ -204,14 +244,18 @@ export default function DoctorAppointments() {
                                         {/* Upload Prescription Modal */}
                                         <Dialog>
                                             <DialogTrigger asChild>
-                                                <Button size="sm" variant="outline">
+                                                <Button size="sm" variant="outline"
+                                                    onClick={() => {
+                                                        setSelectedAppt(appt);
+                                                    }}
+                                                >
                                                     Upload Prescription
                                                 </Button>
                                             </DialogTrigger>
                                             <DialogContent className="sm:max-w-lg w-full rounded-lg p-6 bg-white shadow-xl">
                                                 <DialogHeader>
                                                     <DialogTitle className="text-lg font-semibold text-gray-800">
-                                                        Upload Prescription for {appt.name}
+                                                        Upload Prescription for {appt.Patient.name}
                                                     </DialogTitle>
                                                     <p className="text-sm text-gray-500 mt-1">
                                                         Please select a prescription file (PDF, DOC, DOCX) to upload.
@@ -220,7 +264,7 @@ export default function DoctorAppointments() {
 
                                                 <div className="mt-4 flex flex-col items-center justify-center gap-4">
                                                     <label
-                                                        htmlFor={`file-upload-${appt.id}`}
+                                                        htmlFor={`file-upload-${appt._id}`}
                                                         className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
                                                     >
                                                         <svg
@@ -241,17 +285,27 @@ export default function DoctorAppointments() {
                                                             Click to select or drag and drop your file here
                                                         </span>
                                                         <input
-                                                            id={`file-upload-${appt.id}`}
+                                                            id={`file-upload-${appt._id}`}
                                                             type="file"
                                                             accept=".pdf,.doc,.docx"
                                                             className="hidden"
-                                                            onChange={(e) => e.target.files && uploadPrescription(e.target.files[0])}
+                                                            onChange={(e) => {
+                                                                if (e.target.files && e.target.files[0]) {
+                                                                    setFileToUpload(e.target.files[0]);
+                                                                }
+                                                            }}
                                                         />
                                                     </label>
                                                     <DialogClose asChild>
                                                         <Button
                                                             className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                                                            onClick={() => selectedAppt && uploadPrescription(selectedAppt)}
+                                                            onClick={() => {
+                                                                if (fileToUpload && selectedAppt) {
+                                                                    uploadPrescriptionFile(fileToUpload);
+                                                                } else {
+                                                                    toast.error("Please select a file first");
+                                                                }
+                                                            }}
                                                         >
                                                             Upload
                                                         </Button>
@@ -272,27 +326,27 @@ export default function DoctorAppointments() {
             {view === "card" && (
                 <div className="grid sm:grid-cols-2 md:grid-cols-3  gap-4">
                     {filteredAppointments.map((appt) => (
-                        <Card key={appt.id} className="shadow-md">
+                        <Card key={appt._id} className="shadow-md">
                             <CardContent className="p-4 space-y-2">
                                 <div className="flex items-center gap-2">
                                     <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-sm font-bold">
                                         {appt.initials}
                                     </div>
                                     <div>
-                                        <h2 className="font-semibold">{appt.name}</h2>
+                                        <h2 className="font-semibold">{appt.Patient.Name}</h2>
                                         <p className="text-xs text-gray-500">{appt.id}</p>
                                     </div>
                                 </div>
-                                <p className="text-sm"><strong>Time:</strong> {appt.time}</p>
-                                <p className="text-sm"><strong>Condition:</strong> {appt.condition}</p>
-                                <p className={`flex items-center gap-2 font-medium ${statusColors[appt.status]}`}>
-                                    {statusIcons[appt.status]} {appt.status}
+                                <p className="text-sm"><strong>Time:</strong> {appt.Date}</p>
+                                <p className="text-sm"><strong>Condition:</strong> {appt.symptoms}</p>
+                                <p className={`flex items-center gap-2 font-medium ${statusColors[appt.Status]}`}>
+                                    {statusIcons[appt.Status]} {appt.Status}
                                 </p>
                                 <p className="text-sm">
                                     <strong>Prescription:</strong>{" "}
-                                    {appt.prescription ? (
-                                        <a href={`/${appt.prescription}`} className="text-green-600 underline">
-                                            {appt.prescription}
+                                    {appt.Prescription_url ? (
+                                        <a href={`/${appt.Prescription_url}`} className="text-green-600 underline">
+                                            {appt.Prescription_url}
                                         </a>
                                     ) : (
                                         "No prescription"
@@ -307,7 +361,7 @@ export default function DoctorAppointments() {
                                                 variant="outline"
                                                 onClick={() => {
                                                     setSelectedAppt(appt);
-                                                    setNewStatus(appt.status);
+                                                    setNewStatus(appt.Status);
                                                 }}
                                             >
                                                 Change Status
@@ -315,17 +369,16 @@ export default function DoctorAppointments() {
                                         </DialogTrigger>
                                         <DialogContent>
                                             <DialogHeader>
-                                                <DialogTitle>Change Status for {appt.name}</DialogTitle>
+                                                <DialogTitle>Change Status for {appt.Patient.Name}</DialogTitle>
                                             </DialogHeader>
                                             <Select value={newStatus} onValueChange={setNewStatus}>
                                                 <SelectTrigger>
                                                     <SelectValue placeholder="Select new status" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="Scheduled">Scheduled</SelectItem>
-                                                    <SelectItem value="In Progress">In Progress</SelectItem>
-                                                    <SelectItem value="Completed">Completed</SelectItem>
-                                                    <SelectItem value="Cancelled">Cancelled</SelectItem>
+                                                    <SelectItem value="pending">Scheduled</SelectItem>
+                                                    <SelectItem value="completed">Completed</SelectItem>
+                                                    <SelectItem value="cancelled">Cancelled</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             <DialogFooter>
@@ -352,7 +405,7 @@ export default function DoctorAppointments() {
                                         <DialogContent className="sm:max-w-lg w-full rounded-lg p-6 bg-white shadow-xl">
                                             <DialogHeader>
                                                 <DialogTitle className="text-lg font-semibold text-gray-800">
-                                                    Upload Prescription for {appt.name}
+                                                    Upload Prescription for {appt.Patient.Name}
                                                 </DialogTitle>
                                                 <p className="text-sm text-gray-500 mt-1">
                                                     Please select a prescription file (PDF, DOC, DOCX) to upload.
@@ -361,7 +414,7 @@ export default function DoctorAppointments() {
 
                                             <div className="mt-4 flex flex-col items-center justify-center gap-4">
                                                 <label
-                                                    htmlFor={`file-upload-${appt.id}`}
+                                                    htmlFor={`file-upload-${appt._id}`}
                                                     className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
                                                 >
                                                     <svg
@@ -382,17 +435,28 @@ export default function DoctorAppointments() {
                                                         Click to select or drag and drop your file here
                                                     </span>
                                                     <input
-                                                        id={`file-upload-${appt.id}`}
+                                                        id={`file-upload-${appt._id}`}
                                                         type="file"
                                                         accept=".pdf,.doc,.docx"
                                                         className="hidden"
-                                                        onChange={(e) => e.target.files && uploadPrescription(e.target.files[0])}
+                                                        onChange={(e) => {
+                                                            if (e.target.files && e.target.files[0]) {
+                                                                setFileToUpload(e.target.files[0]);
+                                                                setSelectedAppt(appt);
+                                                            }
+                                                        }}
                                                     />
                                                 </label>
                                                 <DialogClose asChild>
                                                     <Button
                                                         className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                                                        onClick={() => selectedAppt && uploadPrescription(selectedAppt)}
+                                                        onClick={() => {
+                                                            if (fileToUpload && selectedAppt) {
+                                                                uploadPrescriptionFile(fileToUpload);
+                                                            } else {
+                                                                toast.error("Please select a file first");
+                                                            }
+                                                        }}
                                                     >
                                                         Upload
                                                     </Button>

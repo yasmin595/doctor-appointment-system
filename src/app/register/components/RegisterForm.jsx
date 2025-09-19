@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { registerUser } from "@/app/actions/auth/registerUser";
 import { toast } from "sonner"; // ✅ sonner import
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const [role, setRole] = useState("Patient");
   const [loading, setLoading] = useState(false);
+const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +49,6 @@ export default function RegisterForm() {
         rating: 0,
         certificates: form.certificates?.value ? [form.certificates.value] : [],
         availability: {},
-        appointments: [],
         isVerified: false,
       };
     }
@@ -59,6 +60,7 @@ export default function RegisterForm() {
         toast.success("Registration successful ✅"); // ✅ Success toast
         form.reset();
         setRole("Patient"); // reset role
+         router.push("/");
       } else {
         toast.error(res.message || "Registration failed ❌"); // ✅ Error toast
       }

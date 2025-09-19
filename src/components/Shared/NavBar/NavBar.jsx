@@ -5,33 +5,41 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Logo from "../Logo/Logo";
 import { useSession, signOut } from "next-auth/react";
-import Image from "next/image";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function Navbar() {
+  // ---- সব হুক একসাথে উপরে ----
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const { data: session, status } = useSession();
-  console.log(session)
 
-  // Scroll effect
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // ---- সব হুক কল করার পর condition ----
+  if (pathname?.startsWith("/dashboard")) {
+    return null; // Dashboard ও তার সাবপেজে Navbar দেখাবে না
+  }
+
+  // ---- Navigation links ----
   const links = [
     { name: "Home", href: "/" },
     { name: "Services", href: "/services" },
     ...(session?.user?.role
-      ? [{
-        name: "Dashboard",
-        href: session.user.role === "Doctor"
-          ? "/dashboard/doctor/doctor-appointments"
-          : ( session.user.role==="Patient" ? "dashboard/patient/all-doctor" 
-            : "/admin-dashboard"),
-      }]
+      ? [
+        {
+          name: "Dashboard",
+          href:
+            session.user.role === "Doctor"
+              ? "/dashboard/doctor/doctor-appointments"
+              : session.user.role === "Patient"
+                ? "/dashboard/patient/all-doctor"
+                : "/admin-dashboard",
+        },
+      ]
       : []),
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
@@ -72,17 +80,15 @@ export default function Navbar() {
 
         {/* Auth Buttons */}
         <div className="hidden md:flex items-center space-x-3">
-
           {status === "authenticated" ? (
             <>
-
               <button
                 onClick={() => signOut()}
                 className="lg:px-3 md:px-2 py-1 rounded-md border border-green-600 text-green-600 hover:bg-green-600 hover:text-white transition"
               >
                 Logout
               </button>
-               <div>
+              <div>
                 <ModeToggle />
               </div>
             </>

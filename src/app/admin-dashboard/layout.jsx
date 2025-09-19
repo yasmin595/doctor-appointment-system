@@ -1,13 +1,15 @@
 "use client";
-import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, Home, Users, LayoutDashboard, UserCog, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useState } from "react";
 import { redirect } from "next/navigation";
 
 export default function DashboardLayout({ children }) {
-
+  const [isOpen, setIsOpen] = useState(false);
+  
   const { data: session, status } = useSession();
+  
   if (status === "loading") {
     return <div className="text-center mt-20">Loading...</div>;
   }
@@ -17,7 +19,8 @@ export default function DashboardLayout({ children }) {
   if (session?.user?.role !== "Admin") {
     redirect('/')
   }
-  const [isOpen, setIsOpen] = useState(false);
+
+
 
   const navItems = [
     { href: "/", label: "Home", icon: Home },
@@ -42,7 +45,10 @@ export default function DashboardLayout({ children }) {
             </li>
           ))}
           <li>
-            <button className="flex items-center gap-3 text-red-600 dark:text-red-400" onClick={() => { signOut() }}>
+            <button
+            onClick={() => signOut()}
+            className="flex items-center gap-3 text-red-600 dark:text-red-400">
+               
               <LogOut size={18} /> LogOut
             </button>
           </li>
@@ -76,12 +82,16 @@ export default function DashboardLayout({ children }) {
               </li>
             ))}
             <li>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 text-red-600 dark:text-red-400"
-              >
-                <LogOut size={18} /> LogOut
-              </button>
+          <button
+            onClick={() => {
+              signOut({ callbackUrl: "/" });
+            }}
+            className="flex items-center gap-3 text-red-600 dark:text-red-400"
+          >
+            <LogOut size={18} /> LogOut
+          </button>
+
+
             </li>
           </ul>
         </div>

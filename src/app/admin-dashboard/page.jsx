@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -12,29 +12,50 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import PatientFeedback from "@/components/HomePage/PatientFeedback/PatientFeedback";
+import { useSession } from "next-auth/react";
+
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const { data: session } = useSession(); // ✅ get logged-in user session
+  const [admin, setAdmin] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const dashboardData = {
-    stats: {
-      totalPatients: 1248,
-      newPatients: 42,
-      appointmentsToday: 28,
-      availableDoctors: 18,
-    },
-    recentAppointments: [
-      { id: 1, patient: "Sarah Johnson", doctor: "Dr. Patel", time: "10:30 AM", status: "Completed" },
-      { id: 2, patient: "Michael Chen", doctor: "Dr. Rodriguez", time: "11:45 AM", status: "In Progress" },
-      { id: 3, patient: "Emma Wilson", doctor: "Dr. Kim", time: "1:15 PM", status: "Scheduled" },
-      { id: 4, patient: "James Miller", doctor: "Dr. Thompson", time: "2:30 PM", status: "Scheduled" },
-    ],
-    notifications: [
-      { id: 1, message: "New patient registration requires approval", priority: "high" },
-      { id: 2, message: "Monthly staff meeting scheduled for Friday", priority: "medium" },
-      { id: 3, message: "Inventory restock needed for surgical masks", priority: "high" },
-    ],
-  };
+
+  const dashboardData = 
+  { stats: { totalPatients: 1248,
+     newPatients: 42, appointmentsToday: 28, 
+     availableDoctors: 18, },
+      recentAppointments: [ 
+        { id: 1, patient: "Sarah Johnson", 
+          doctor: "Dr. Patel", time: "10:30 AM", 
+          status: "Completed" }, { id: 2, patient: "Michael Chen", 
+            doctor: "Dr. Rodriguez", time: "11:45 AM", status: "In Progress" },
+             { id: 3, patient: "Emma Wilson", doctor: "Dr. Kim", time: "1:15 PM", status: "Scheduled" }, 
+             { id: 4, patient: "James Miller", doctor: "Dr. Thompson", time: "2:30 PM", status: "Scheduled" }, ],
+              notifications: [ { id: 1, message: "New patient registration requires approval", priority: "high" }, { id: 2, message: "Monthly staff meeting scheduled for Friday", priority: "medium" }, { id: 3, message: "Inventory restock needed for surgical masks", priority: "high" }, ], };
+  
+  
+  useEffect(() => {
+    if (!session?.user?.email) return;
+
+    const fetchAdminData = async () => {
+      try {
+        const res = await fetch(`/api/adminAuth/admin?email=${session?.user?.email}`);
+        if (!res.ok) throw new Error("Failed to fetch admin data");
+
+        const data = await res.json();
+        setAdmin(data);
+      } catch (error) {
+         toast.error("Something went wrong ❌");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAdminData();
+  }, [session]);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="admin-dashboard min-h-screen bg-gray-100 dark:bg-black text-gray-900 dark:text-gray-100 transition-colors">
@@ -43,13 +64,23 @@ export default function AdminDashboard() {
         <meta name="description" content="Administrative dashboard for medical service management" />
       </Head>
 
+
       {/* Header */}
       <header className="px-6 py-4 shadow-md bg-white dark:bg-gray-900">
-        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold">Admin Dashboard   </h1>
+
+      
+        
+
+
       </header>
 
       <div className="font-bold text-xl md:text-2xl text-center py-6">
-        <span>Welcome, Admin</span>
+        <ul>
+  <h1>Welcome, Admin <span className="text-green-700 italic">{admin?.name}</span></h1>
+</ul>
+
+     
       </div>
 
       <main className="px-6 pb-12">
@@ -116,9 +147,7 @@ export default function AdminDashboard() {
                 ))}
               </TableBody>
             </Table>
-            <Link href={"/doctor-appointments"}>
-              <Button className="mt-4 w-full">View All Appointments</Button>
-            </Link>
+       
           </div>
 
           {/* Notifications */}
@@ -137,7 +166,7 @@ export default function AdminDashboard() {
                 </li>
               ))}
             </ul>
-            <Button className="mt-4 w-full">View All Notifications</Button>
+            
           </div>
         </div>
 

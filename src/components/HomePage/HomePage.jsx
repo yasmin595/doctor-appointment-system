@@ -5,6 +5,7 @@ import PatientFeedback from './PatientFeedback/PatientFeedback'
 import WhyDocNow from './WhyDocNow/WhyDocNow'
 import FAQSection from './FAQSection/FAQSection'
 import ContactUs from './ContactUs/ContactUs'
+import DoctorSection from './DoctorSection/DoctorSection'
 
 export default function HomePage() {
 
@@ -13,6 +14,10 @@ export default function HomePage() {
       {/* Banner Section */}
       <section className="pb-16">
         <Banner />
+      </section>
+      {/* DoctorSection */}
+      <section className="pb-16">
+           <DoctorSection />
       </section>
 
       {/* How It Works Section */}
